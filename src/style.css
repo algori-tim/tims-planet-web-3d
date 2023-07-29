@@ -8,3 +8,16 @@ body,
 	height: 100%;
 	background: black;
 }
+
+div[data-cursor='look'] {
+	cursor: url('./icons/look.svg'), default;
+}
+
+div[data-cursor='talk'] {
+	cursor: url('./icons/talk.svg'), default;
+}
+
+div[data-cursor='walk'] {
+	fill: green;
+	cursor: url('./icons/walk.svg'), default;
+}
