@@ -5,17 +5,16 @@ import App from './App.jsx';
 import Hud from './Hud';
 
 const root = ReactDOM.createRoot(document.querySelector('#root'));
+const cameraOptions = {
+	fov: 45,
+	near: 0.1,
+	far: 500,
+	position: [-30, 20, 5],
+};
 
 root.render(
 	<>
-		<Canvas
-			camera={{
-				fov: 45,
-				near: 0.1,
-				far: 500,
-				position: [-4, 3, 6],
-			}}
-		>
+		<Canvas camera={cameraOptions}>
 			<App />
 		</Canvas>
 		<Hud />

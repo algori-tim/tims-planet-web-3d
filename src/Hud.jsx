@@ -15,16 +15,18 @@ export default function Hud() {
 			<div className='hud-messages-container'>
 				<p className='hud-messages' id='hud-messages'></p>
 			</div>
-			<div className='toggles'>
-				<button onClick={() => handleClick('look')} className='circle'>
-					<img className='icon' src='/icons/look.svg' alt='look'></img>
-				</button>
-				<button onClick={() => handleClick('talk')} className='circle'>
-					<img className='icon' src='/icons/talk.svg' alt='talk'></img>
-				</button>
-				<button onClick={() => handleClick('walk')} className='circle'>
-					<img className='icon' src='/icons/walk.svg' alt='walk'></img>
-				</button>
+			<div className='toggles-container'>
+				<div className='toggles'>
+					<button onClick={() => handleClick('look')} className='circle'>
+						<img className='icon' src='/icons/look.svg' alt='look'></img>
+					</button>
+					<button onClick={() => handleClick('talk')} className='circle'>
+						<img className='icon' src='/icons/talk.svg' alt='talk'></img>
+					</button>
+					<button onClick={() => handleClick('walk')} className='circle'>
+						<img className='icon' src='/icons/walk.svg' alt='walk'></img>
+					</button>
+				</div>
 			</div>
 		</>
 	);

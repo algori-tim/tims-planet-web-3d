@@ -18,6 +18,7 @@
 		"react-dom": "18.2",
 		"styled-components": "^6.0.5",
 		"three": "^0.153.0",
+		"yuka": "^0.7.7",
 		"zustand": "^4.3.9"
 	}
 }
