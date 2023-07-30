@@ -1,16 +1,21 @@
 import { create } from 'zustand';
 import {
 	Vector3,
-	Vehicle,
 	EntityManager,
 	Time,
 	FollowPathBehavior,
-	NavMeshLoader,
 	OnPathBehavior,
-	Path,
+	NavMeshLoader,
 } from 'yuka';
+
+// import { NavMeshLoader } from './yuka/NavMeshLoader';
 import * as THREE from 'three';
-import { createConvexRegionHelper, createPathHelper } from './navHelper';
+import {
+	CustomVehicle,
+	createConvexRegionHelper,
+	createPathHelper,
+	CustomNavMesh,
+} from './navHelpers';
 
 const interactionMatrix = new Map();
 interactionMatrix.set('look_ground', "It's so green...");
@@ -28,10 +33,12 @@ const getInteractionMessage = (cursor, interactionPoint) => {
 	if (cursor === 'talk') return 'It responds with utter silence.';
 	if (cursor === 'look') return 'Stop looking at that!';
 };
+
 const sync = (entity, renderComponent) => {
 	// console.log(renderComponent)
 	renderComponent.matrix.copy(entity.worldMatrix);
 };
+
 const useStore = create((set, get) => {
 	let cursorType = document.getElementById('root').getAttribute('data-cursor');
 	let navMesh;
@@ -39,31 +46,30 @@ const useStore = create((set, get) => {
 	let entityManager = new EntityManager();
 	let time = new Time();
 	let pathHelper = createPathHelper();
+	let includeHelpers = false;
 
 	return {
 		entityManager,
 		time,
-		init(scene = null) {
+		init(scene) {
 			if (navMesh) return;
+			includeHelpers = includeHelpers;
 			const loader = new NavMeshLoader();
-			loader.load('./models/world_0_nav.glb').then((out) => {
-				navMesh = out;
-				navMesh.mergeConvexRegions = false;
-				if (scene) {
-					const helper = createConvexRegionHelper(navMesh);
-					helper.position.y = 0.01;
-					scene.add(helper);
-					scene.add(pathHelper);
-				}
+			loader.load('./models/world_0_nav.glb').then((navigationMesh) => {
+				navMesh = new CustomNavMesh(navigationMesh);
+				scene.add(createConvexRegionHelper(navMesh));
+				scene.add(pathHelper);
 			});
 		},
 		setPlayerVehicle(playerMesh) {
 			if (playerVehicle) return;
-			playerVehicle = new Vehicle();
-			playerVehicle.setRenderComponent(playerMesh, sync);
+			playerVehicle = new CustomVehicle();
+			playerVehicle.navMesh = navMesh;
 			playerVehicle.maxForce = 1;
 			playerVehicle.maxSpeed = 1.5;
+			playerVehicle.setRenderComponent(playerMesh, sync);
 			const followPathBehavior = new FollowPathBehavior();
+			followPathBehavior.nextWaypointDistance = 1;
 			followPathBehavior.active = false;
 			playerVehicle.steering.add(followPathBehavior);
 			entityManager.add(playerVehicle);
@@ -81,29 +87,25 @@ const useStore = create((set, get) => {
 			);
 
 			const groundIntersect = event.intersections.find((x) => x.object.name === 'ground');
-
 			if (groundIntersect && cursorType === 'walk') {
-				console.log(
-					`${playerVehicle.position.x}-${playerVehicle.position.y}-${playerVehicle.position.z} -> ${groundIntersect.point.x}-${groundIntersect.point.y}-${groundIntersect.point.z}`
-				);
-				const pathVectors = navMesh.findPath(
+				const pathVectors = navMesh.findMidpointPath(
 					playerVehicle.position,
-					new Vector3().copy(groundIntersect.point) //.x, groundIntersect.point.y, groundIntersect.point.z)
+					new Vector3().copy(groundIntersect.point)
 				);
-				if (pathVectors.length < 1) return;
-				console.log(pathVectors);
+
+				if (pathVectors.length < 2) return;
 
 				pathHelper.visible = true;
 				pathHelper.geometry.dispose();
 				pathHelper.geometry = new THREE.BufferGeometry().setFromPoints(pathVectors);
 
-				const followPathBehavior = playerVehicle.steering.behaviors[0];
-				followPathBehavior.active = true;
-				followPathBehavior.path.clear();
+				playerVehicle.toRegion = navMesh.getRegionForPoint(groundIntersect.point);
+				playerVehicle.steering.behaviors[0].active = true;
+				playerVehicle.steering.behaviors[0].path.clear();
 
-				pathVectors.map((point) => followPathBehavior.path.add(point));
+				pathVectors.map((point) => playerVehicle.steering.behaviors[0].path.add(point));
 
-				playerVehicle.steering.add(new OnPathBehavior(followPathBehavior.path));
+				playerVehicle.steering.add(new OnPathBehavior(playerVehicle.steering.behaviors[0].path));
 			} else {
 				console.log('missed');
 			}

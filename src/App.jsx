@@ -9,18 +9,15 @@ import { useThree } from '@react-three/fiber';
 export default function App() {
 	const { scene } = useThree();
 	const init = useStore((s) => s.init);
-	// init(scene);
-	init(scene);
+	init(scene, true);
 	return (
 		<>
 			<Background />
 			<OrbitControls />
 			<directionalLight position={[1, 2, 3]} intensity={1.5} />
 			<ambientLight intensity={0.5} />
-			<Suspense>
-				<World />
-				<Player />
-			</Suspense>
+			<World />
+			<Player />
 		</>
 	);
 }

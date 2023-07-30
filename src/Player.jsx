@@ -16,10 +16,9 @@ export default function Player() {
 	useEffect(() => {
 		setPlayerVehicle(playerRef.current);
 	}, []);
-	useFrame(() => {
-		const delta = time.update().getDelta();
-		entityManager.update(delta);
-	});
+	// useFrame(() => {
+	// 	entityManager.update(time.update().getDelta());
+	// });
 
 	return (
 		<group>
