@@ -5,6 +5,7 @@ import Background from './Components/Background/Background';
 import { Suspense } from 'react';
 import useStore from './Stores/store';
 import { useThree } from '@react-three/fiber';
+import Cactus from './Components/Cactus/Cactus';
 
 export default function App() {
 	const { scene } = useThree();
@@ -18,6 +19,7 @@ export default function App() {
 			<ambientLight intensity={0.5} />
 			<World />
 			<Player />
+			<Cactus />
 		</>
 	);
 }
