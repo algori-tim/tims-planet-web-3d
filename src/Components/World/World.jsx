@@ -1,5 +1,5 @@
 import { useGLTF } from '@react-three/drei';
-import useStore from './store';
+import useStore from '../../Stores/store';
 
 export default function World() {
 	const world = useGLTF('./models/world_0.glb');

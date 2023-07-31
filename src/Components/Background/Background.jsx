@@ -1,5 +1,5 @@
 import { Stars } from '@react-three/drei';
-import useStore from './store';
+import useStore from '../../Stores/store';
 import * as THREE from 'three';
 
 export default function Background() {

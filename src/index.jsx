@@ -1,8 +1,8 @@
-import './style.css';
+import './index.css';
 import ReactDOM from 'react-dom/client';
 import { Canvas } from '@react-three/fiber';
 import App from './App.jsx';
-import Hud from './Hud';
+import Hud from './Components/Hud/Hud';
 
 const root = ReactDOM.createRoot(document.querySelector('#root'));
 const cameraOptions = {

@@ -1,9 +1,9 @@
 import { OrbitControls } from '@react-three/drei';
-import World from './World';
-import Player from './Player';
-import Background from './Background';
+import World from './Components/World/World';
+import Player from './Components/Player/Player';
+import Background from './Components/Background/Background';
 import { Suspense } from 'react';
-import useStore from './store';
+import useStore from './Stores/store';
 import { useThree } from '@react-three/fiber';
 
 export default function App() {

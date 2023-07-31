@@ -1,6 +1,6 @@
 import React from 'react';
 import './hud.css';
-import useStore from './store.js';
+import useStore from '../../Stores/store';
 
 export default function Hud() {
 	const setCursor = useStore((store) => store.setCursor);

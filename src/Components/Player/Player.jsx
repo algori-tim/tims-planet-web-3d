@@ -1,5 +1,5 @@
 import { useGLTF } from '@react-three/drei';
-import useStore from './store';
+import useStore from '../../Stores/store';
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useEffect } from 'react';
@@ -15,10 +15,12 @@ export default function Player() {
 
 	useEffect(() => {
 		setPlayerVehicle(playerRef.current);
+		console.log(entityManager.entities.find((x) => x.name === 'player'));
 	}, []);
-	// useFrame(() => {
-	// 	entityManager.update(time.update().getDelta());
-	// });
+
+	useFrame(() => {
+		entityManager.update(time.update().getDelta());
+	});
 
 	return (
 		<group>
