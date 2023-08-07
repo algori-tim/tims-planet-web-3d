@@ -1,31 +1,57 @@
 import { create } from 'zustand';
 import * as YUKA from 'yuka';
 import * as THREE from 'three';
-import { createConvexRegionHelper, createPathHelper } from '../CustomYukaObjects/navHelpers';
-import { CustomVehicle } from '../CustomYukaObjects/CustomVehicle';
+import {
+	createConvexRegionHelper,
+	createPathHelper,
+	getPath,
+	initPlayerVehicle,
+} from '../Helpers/yukaHelpers';
 import { CustomNavMesh } from '../CustomYukaObjects/CustomNavMesh';
-import { getInteractionMessage } from '../Data/interactions';
+import { handleInteraction } from '../Data/interactions';
+import { getDistance } from '../Helpers/mathHelpers';
+import gsap from 'gsap';
 
-const sync = (entity, renderComponent) => {
-	// console.log(renderComponent)
-	renderComponent.matrix.copy(entity.worldMatrix);
+const getAnimTimeline = (navMesh, player, pathHelper, target) => {
+	const path = getPath(navMesh, player.mesh.position, target);
+
+	if (pathHelper) {
+		pathHelper.visible = true;
+		pathHelper.geometry.dispose();
+		pathHelper.geometry = new THREE.BufferGeometry().setFromPoints(path);
+	}
+
+	const tl = gsap.timeline();
+	for (let i = 1; i < path.length; i++) {
+		const next = new THREE.Vector3().copy(path[i]);
+		var distance = getDistance(path[i - 1], path[i]);
+		// console.log(distance);
+		tl.to(player.mesh.position, {
+			x: path[i].x,
+			y: path[i].y,
+			z: path[i].z,
+			ease: 'none',
+			duration: distance / 2,
+			onStart: () => player.mesh.lookAt(next),
+		});
+	}
+	return tl;
 };
 
 const useStore = create((set, get) => {
 	let cursorType = document.getElementById('root').getAttribute('data-cursor');
 	let navMesh;
 	let playerVehicle;
+	let player;
 	let entityManager = new YUKA.EntityManager();
 	let time = new YUKA.Time();
 	let pathHelper = createPathHelper();
-	let includeHelpers = false;
-
+	let playerAnim;
 	return {
 		entityManager,
 		time,
 		init(scene) {
 			if (navMesh) return;
-			includeHelpers = includeHelpers;
 			const loader = new YUKA.NavMeshLoader();
 			loader.load('./models/world_0_nav.glb').then((navigationMesh) => {
 				navMesh = new CustomNavMesh(navigationMesh);
@@ -33,57 +59,43 @@ const useStore = create((set, get) => {
 				scene.add(pathHelper);
 			});
 		},
-		setPlayerVehicle(playerMesh) {
+		setYukaPlayer(playerMesh) {
 			if (playerVehicle) return;
 
-			playerVehicle = new CustomVehicle();
-			playerVehicle.name = 'player';
-			playerVehicle.navMesh = navMesh;
-			playerVehicle.maxForce = 1;
-			playerVehicle.maxSpeed = 1.5;
-			playerVehicle.setRenderComponent(playerMesh, sync);
-			const followPathBehavior = new YUKA.FollowPathBehavior();
-			followPathBehavior.nextWaypointDistance = 1;
-			followPathBehavior.active = false;
-			playerVehicle.steering.add(followPathBehavior);
-			entityManager.add(playerVehicle);
+			playerVehicle = initPlayerVehicle(navMesh, playerMesh, entityManager);
 		},
+		setPlayer(playerMesh, playerAnimations) {
+			player = {
+				mesh: playerMesh,
+				animations: playerAnimations,
+				state: 'idle',
+			};
+			player.animations.idle.play();
+		},
+
 		setCursor(cursor) {
 			cursorType = cursor;
 			console.log(`set ${cursorType}`);
 		},
 		handleInteraction(event) {
+			console.log(event.intersections);
 			event.stopPropagation();
 
-			document.getElementById('hud-messages').innerHTML = getInteractionMessage(
+			handleInteraction(
 				cursorType,
-				event.object.name
+				event.eventObject.name === '' ? event.object.name : event.eventObject.name
 			);
 
 			const groundIntersect = event.intersections.find((x) => x.object.name === 'ground');
 			if (groundIntersect && cursorType === 'walk') {
-				const pathVectors = navMesh.findMidpointPath(
-					playerVehicle.position,
-					new YUKA.Vector3().copy(groundIntersect.point)
-				);
+				if (playerAnim) {
+					playerAnim.kill();
+				}
+				playerAnim = getAnimTimeline(navMesh, player, pathHelper, groundIntersect.point);
+				playerAnim.call(() => player.animations.walk.stop());
+				playerAnim.play();
 
-				if (pathVectors.length < 2) return;
-
-				pathHelper.visible = true;
-				pathHelper.geometry.dispose();
-				pathHelper.geometry = new THREE.BufferGeometry().setFromPoints(pathVectors);
-
-				playerVehicle.toRegion = navMesh.getRegionForPoint(groundIntersect.point);
-				playerVehicle.steering.behaviors[0].active = true;
-				playerVehicle.steering.behaviors[0].path.clear();
-
-				pathVectors.map((point) => playerVehicle.steering.behaviors[0].path.add(point));
-
-				playerVehicle.steering.add(
-					new YUKA.OnPathBehavior(playerVehicle.steering.behaviors[0].path)
-				);
-			} else {
-				console.log('missed');
+				player.animations.walk.play();
 			}
 		},
 	};

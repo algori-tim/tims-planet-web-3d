@@ -1,38 +1,44 @@
-import { useGLTF } from '@react-three/drei';
+import { useAnimations, useGLTF } from '@react-three/drei';
 import useStore from '../../Stores/store';
 import { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
 import { useEffect } from 'react';
 
 export default function Player() {
-	const player = useGLTF('./models/player_0.glb');
-	console.log(player);
 	const playerRef = useRef(null);
+	const { nodes, materials, animations } = useGLTF('./models/astronaut.glb');
+	const { actions } = useAnimations(animations, playerRef);
 	const handleInteraction = useStore((store) => store.handleInteraction);
-	const setPlayerVehicle = useStore((store) => store.setPlayerVehicle);
-	const entityManager = useStore((store) => store.entityManager);
-	const time = useStore((store) => store.time);
+	const setPlayer = useStore((store) => store.setPlayer);
 
 	useEffect(() => {
-		setPlayerVehicle(playerRef.current);
-		console.log(entityManager.entities.find((x) => x.name === 'player'));
+		setPlayer(playerRef.current, actions);
 	}, []);
 
-	useFrame(() => {
-		entityManager.update(time.update().getDelta());
-	});
-
 	return (
-		<group>
-			<mesh
-				name='player'
-				matrixAutoUpdate={false}
-				onClick={(e) => handleInteraction(e)}
-				position-y={0.5}
-				ref={playerRef}
-				material={player.nodes.player.material}
-				geometry={player.nodes.player.geometry}
-			></mesh>
-		</group>
+		<mesh name='player' onClick={(e) => handleInteraction(e)} ref={playerRef}>
+			<group>
+				<skinnedMesh
+					name='cosmonaut_1'
+					geometry={nodes.cosmonaut_1.geometry}
+					material={materials.orange}
+					skeleton={nodes.cosmonaut_1.skeleton}
+				/>
+				<skinnedMesh
+					name='cosmonaut_2'
+					geometry={nodes.cosmonaut_2.geometry}
+					material={materials.black}
+					skeleton={nodes.cosmonaut_2.skeleton}
+				/>
+				<skinnedMesh
+					name='cosmonaut_3'
+					geometry={nodes.cosmonaut_3.geometry}
+					material={materials.silver}
+					skeleton={nodes.cosmonaut_3.skeleton}
+				/>
+			</group>
+			<primitive object={nodes.Bone} />
+			<primitive object={nodes.Bone_L004} />
+			<primitive object={nodes.Bone_R004} />
+		</mesh>
 	);
 }

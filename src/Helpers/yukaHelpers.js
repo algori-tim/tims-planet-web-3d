@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { Vehicle, Vector3, AStar, Corridor, NavMesh } from 'yuka';
+import * as YUKA from 'yuka';
+import { CustomVehicle } from '../CustomYukaObjects/CustomVehicle';
 
 export const createConvexRegionHelper = (navMesh) => {
 	const regions = navMesh.regions;
-
 	const geometry = new THREE.BufferGeometry();
 	const material = new THREE.MeshBasicMaterial({ color: 'lightblue' });
 	material.wireframe = true;
@@ -13,10 +13,6 @@ export const createConvexRegionHelper = (navMesh) => {
 	const colors = [];
 
 	for (let region of regions) {
-		// one color for each convex region
-
-		// count edges
-
 		let edge = region.edge;
 		const edges = [];
 
@@ -25,8 +21,6 @@ export const createConvexRegionHelper = (navMesh) => {
 
 			edge = edge.next;
 		} while (edge !== region.edge);
-
-		// triangulate
 
 		const triangleCount = edges.length - 2;
 
@@ -58,7 +52,6 @@ export const createCellSpaceHelper = (spatialIndex) => {
 	const cells = spatialIndex.cells;
 
 	const geometry = new THREE.BufferGeometry();
-	console.log(geometry);
 	const material = new THREE.LineBasicMaterial();
 
 	const lines = new THREE.LineSegments(geometry, material);
@@ -70,23 +63,15 @@ export const createCellSpaceHelper = (spatialIndex) => {
 		const min = cell.aabb.min;
 		const max = cell.aabb.max;
 
-		// generate data for twelve lines segments
-
-		// bottom lines
-
 		positions.push(min.x, min.y, min.z, max.x, min.y, min.z);
 		positions.push(min.x, min.y, min.z, min.x, min.y, max.z);
 		positions.push(max.x, min.y, max.z, max.x, min.y, min.z);
 		positions.push(max.x, min.y, max.z, min.x, min.y, max.z);
 
-		// top lines
-
 		positions.push(min.x, max.y, min.z, max.x, max.y, min.z);
 		positions.push(min.x, max.y, min.z, min.x, max.y, max.z);
 		positions.push(max.x, max.y, max.z, max.x, max.y, min.z);
 		positions.push(max.x, max.y, max.z, min.x, max.y, max.z);
-
-		// torso lines
 
 		positions.push(min.x, min.y, min.z, min.x, max.y, min.z);
 		positions.push(max.x, min.y, min.z, max.x, max.y, min.z);
@@ -97,4 +82,49 @@ export const createCellSpaceHelper = (spatialIndex) => {
 	geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
 
 	return lines;
+};
+
+export const getPath = (navMesh, start, end) =>
+	navMesh.findMidpointPath(new YUKA.Vector3().copy(start), new YUKA.Vector3().copy(end));
+
+export const sendPlayerToTarget = (navMesh, playerVehicle, pathHelper, target) => {
+	const pathVectors = navMesh.findMidpointPath(
+		playerVehicle.position,
+		new YUKA.Vector3().copy(target)
+	);
+
+	if (pathVectors.length < 2) return;
+
+	if (pathHelper) {
+		pathHelper.visible = true;
+		pathHelper.geometry.dispose();
+		pathHelper.geometry = new THREE.BufferGeometry().setFromPoints(pathVectors);
+	}
+
+	playerVehicle.toRegion = navMesh.getRegionForPoint(target);
+	playerVehicle.steering.behaviors[0].active = true;
+	playerVehicle.steering.behaviors[0].path.clear();
+
+	pathVectors.map((point) => playerVehicle.steering.behaviors[0].path.add(point));
+
+	playerVehicle.steering.add(new YUKA.OnPathBehavior(playerVehicle.steering.behaviors[0].path));
+};
+
+const sync = (entity, renderComponent) => {
+	renderComponent.matrix.copy(entity.worldMatrix);
+};
+
+export const initPlayerVehicle = (navMesh, playerMesh, entityManager) => {
+	const playerVehicle = new CustomVehicle();
+	playerVehicle.name = 'player';
+	playerVehicle.navMesh = navMesh;
+	playerVehicle.maxForce = 1;
+	playerVehicle.maxSpeed = 1.5;
+	playerVehicle.setRenderComponent(playerMesh, sync);
+	const followPathBehavior = new YUKA.FollowPathBehavior();
+	followPathBehavior.nextWaypointDistance = 1;
+	followPathBehavior.active = false;
+	playerVehicle.steering.add(followPathBehavior);
+	entityManager.add(playerVehicle);
+	return playerVehicle;
 };

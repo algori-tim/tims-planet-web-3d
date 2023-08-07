@@ -19,7 +19,7 @@ export default function App() {
 			<ambientLight intensity={0.5} />
 			<World />
 			<Player />
-			<Cactus />
+			{/* <Cactus /> */}
 		</>
 	);
 }
