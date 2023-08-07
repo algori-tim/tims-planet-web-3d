@@ -18,6 +18,9 @@ div[data-cursor='talk'] {
 }
 
 div[data-cursor='walk'] {
-	fill: green;
 	cursor: url('./icons/walk.cur'), default;
+}
+
+div[data-cursor='grab'] {
+	cursor: url('./icons/grab.cur'), default;
 }

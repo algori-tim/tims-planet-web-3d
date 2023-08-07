@@ -26,6 +26,9 @@ export default function Hud() {
 					<button onClick={() => handleClick('walk')} className='circle'>
 						<img className='icon' src='/icons/walk.svg' alt='walk'></img>
 					</button>
+					<button onClick={() => handleClick('grab')} className='circle'>
+						<img className='icon' src='/icons/grab.svg' alt='grab'></img>
+					</button>
 				</div>
 			</div>
 		</>
