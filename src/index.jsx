@@ -9,7 +9,7 @@ const cameraOptions = {
 	fov: 45,
 	near: 0.1,
 	far: 500,
-	position: [-30, 20, 5],
+	// position: [-30, 20, 5],
 };
 
 root.render(

@@ -47,6 +47,7 @@ const useStore = create((set, get) => {
 	let time = new YUKA.Time();
 	let pathHelper = createPathHelper();
 	let playerAnim;
+
 	return {
 		entityManager,
 		time,

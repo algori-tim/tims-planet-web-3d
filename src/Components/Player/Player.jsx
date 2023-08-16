@@ -2,9 +2,11 @@ import { useAnimations, useGLTF } from '@react-three/drei';
 import useStore from '../../Stores/store';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 
 export default function Player() {
 	const playerRef = useRef(null);
+	const { camera } = useThree();
 	const { nodes, materials, animations } = useGLTF('./models/astronaut.glb');
 	const { actions } = useAnimations(animations, playerRef);
 	const handleInteraction = useStore((store) => store.handleInteraction);
@@ -13,6 +15,15 @@ export default function Player() {
 	useEffect(() => {
 		setPlayer(playerRef.current, actions);
 	}, []);
+
+	useFrame(() => {
+		camera.position.set(
+			playerRef.current.position.x + 15,
+			playerRef.current.position.y + 15,
+			playerRef.current.position.z + 15
+		);
+		camera.lookAt(playerRef.current.position);
+	});
 
 	return (
 		<mesh name='player' onClick={(e) => handleInteraction(e)} ref={playerRef}>
