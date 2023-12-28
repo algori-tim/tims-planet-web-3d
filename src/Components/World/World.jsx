@@ -1,5 +1,6 @@
 import { useGLTF } from '@react-three/drei'
 import useStore from '../../Stores/store'
+import Sign from '../Sign/Sign'
 
 export default function World() {
   const { nodes, materials } = useGLTF('./models/planet.glb')
@@ -8,11 +9,10 @@ export default function World() {
   const observatory = useGLTF('./models/planet_observatory.glb')
   const well = useGLTF('./models/planet_well.glb')
   const sign = useGLTF('./models/planet_sign.glb')
-
   const handleInteraction = useStore((store) => store.handleInteraction)
   return (
     <group onClick={(e) => handleInteraction(e)}>
-      <mesh castShadow receiveShadow name='grass' geometry={nodes.planet_1.geometry}>
+      <mesh castShadow receiveShadow name='grass' geometry={nodes.planet_1.geometry} material={materials.planet_grass}>
         <meshStandardMaterial attach='material' color='#1BB81A' />
       </mesh>
       <mesh
@@ -33,7 +33,7 @@ export default function World() {
       <primitive object={factory.scene} />
       <primitive object={observatory.scene} />
       <primitive object={well.scene} />
-      <primitive object={sign.scene} />
+      <Sign />
     </group>
   )
 }
