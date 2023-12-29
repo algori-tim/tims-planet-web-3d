@@ -1,59 +1,56 @@
 .toggles-container {
-	border-width: 3px;
-	border-style: solid;
-	background-color: gray;
-	border-radius: 25px;
-	height: 75px;
-	width: 30%;
-	position: absolute;
-	bottom: 10px;
-	right: 10px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  border: solid 3px white;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 25px;
+  height: 75px;
+  width: 30%;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .toggles {
-	display: flex;
+  display: flex;
 }
 
 .icon {
-	transform: scale(2);
+  transform: scale(2);
 }
 
 .circle {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin: 0 20px 0 20px;
-	width: 60px;
-	height: 60px;
-	border-radius: 50%;
-	background-color: red;
-	border-style: solid;
-	border-width: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 20px 0 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: solid 4px white;
 }
 
 .circle:hover {
-	background-color: lightcoral;
-	/* box-shadow: 0 4px 8px 0 lightcoral, 0 6px 20px 0 lightcoral; */
-	cursor: pointer;
+  background-color: goldenrod;
+  cursor: pointer;
 }
 
 .hud-messages-container {
-	border-width: 3px;
-	border-style: solid;
-	background-color: gray;
-	border-radius: 25px;
-	height: 75px;
-	width: 30%;
-	font-family: 'Teko', sans-serif;
-	position: absolute;
-	bottom: 10px;
-	left: 10px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  border-width: 3px;
+  border-style: solid;
+  background-color: gray;
+  border-radius: 25px;
+  height: 75px;
+  width: 30%;
+  font-family: 'Teko', sans-serif;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .hud-messages {

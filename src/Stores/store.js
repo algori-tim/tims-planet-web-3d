@@ -3,7 +3,7 @@ import * as YUKA from 'yuka'
 import * as THREE from 'three'
 import { createConvexRegionHelper, createPathHelper, getPath, initPlayerVehicle } from '../Helpers/yukaHelpers'
 import { CustomNavMesh } from '../CustomYukaObjects/CustomNavMesh'
-import { handleInteraction } from '../Data/interactions'
+import { handleQuipInteraction } from '../Data/interactions'
 import { getDistance } from '../Helpers/mathHelpers'
 import gsap from 'gsap'
 
@@ -42,12 +42,9 @@ const useStore = create((set, get) => {
   let playerAnim
   let nextPlayerLocation = new THREE.Vector3(0, 27, 0)
   let overlayType = 'sign'
+  let playerPostion
   const setNextLocation = (next) => {
-    nextPlayerLocation = next
-  }
-
-  const getNextLocation = () => {
-    return nextPlayerLocation
+    set({ nextPlayerLocation: next })
   }
 
   return {
@@ -55,7 +52,7 @@ const useStore = create((set, get) => {
     time,
     overlayType,
     cursorType,
-    getNextLocation,
+    nextPlayerLocation,
     init(scene, shouldAddHelpers = false) {
       if (navMesh) return
       const loader = new YUKA.NavMeshLoader()
@@ -84,10 +81,20 @@ const useStore = create((set, get) => {
     setCursor(cursor) {
       set({ cursorType: cursor })
     },
+
+    setPlayerPosition(position) {
+      set({ playerPostion: position })
+    },
+
+    setOverlayType(overlay) {
+      set({ overlayType: overlay })
+    },
+
     handleInteraction(event) {
       event.stopPropagation()
-      console.log(event.intersections)
-      handleInteraction(cursorType, event.eventObject.name === '' ? event.object.name : event.eventObject.name)
+      const cursorType = document.getElementById('root').getAttribute('data-cursor')
+
+      handleQuipInteraction(cursorType, event.eventObject.name === '' ? event.object.name : event.eventObject.name)
       const groundIntersect = event.intersections.find((x) => x.object.name === 'grass')
       if (groundIntersect && cursorType === 'walk') {
         if (playerAnim) {

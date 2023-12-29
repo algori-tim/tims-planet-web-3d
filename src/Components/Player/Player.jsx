@@ -23,7 +23,8 @@ export default function Player() {
   const handleInteraction = useStore((store) => store.handleInteraction)
   const cursorType = useStore((store) => store.cursorType)
   const setPlayer = useStore((store) => store.setPlayer)
-  const getNextLocation = useStore((store) => store.getNextLocation)
+  const nextPlayerLocation = useStore((store) => store.nextPlayerLocation)
+  const setPlayerPosition = useStore((store) => store.setPlayerPosition)
 
   useEffect(() => {
     setPlayer(playerRef.current, actions)
@@ -38,17 +39,18 @@ export default function Player() {
       playerRef.current.up.copy(normal)
       playerRef.current.rotation.setFromQuaternion(playerRef.current.quaternion)
 
-      if (cursorType === 'walk') {
-        // camera following behind player
-        const cameraOffset = new THREE.Vector3(0, 25, -25)
-        const offset = cameraOffset.clone().applyQuaternion(playerRef.current.quaternion)
-        const targetPosition = playerRef.current.position.clone().add(offset)
-        camera.position.lerp(targetPosition, 0.01)
-        camera.lookAt(playerRef.current.position)
-        camera.up.copy(normal)
-      }
-      if (isEvenToFourDecimals(playerRef.current.position, getNextLocation())) return
-      playerRef.current.lookAt(getNextLocation())
+      // if (cursorType === 'walk') {
+      // camera following behind player
+      const cameraOffset = new THREE.Vector3(0, 25, -25)
+      const offset = cameraOffset.clone().applyQuaternion(playerRef.current.quaternion)
+      const targetPosition = playerRef.current.position.clone().add(offset)
+      camera.position.lerp(targetPosition, 0.01)
+      camera.lookAt(playerRef.current.position)
+      camera.up.copy(normal)
+      setPlayerPosition(playerRef.current.position)
+      // }
+      if (isEvenToFourDecimals(playerRef.current.position, nextPlayerLocation)) return
+      playerRef.current.lookAt(nextPlayerLocation)
     }
   })
 
