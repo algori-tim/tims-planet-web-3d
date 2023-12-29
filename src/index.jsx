@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber'
 import App from './App.jsx'
 import Hud from './Components/Hud/Hud'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
+import ContextModal from './Components/ContextModal/ContextModal.jsx'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 const cameraOptions = {
@@ -19,5 +20,6 @@ root.render(
       <App />
     </Canvas>
     <Hud />
+    <ContextModal />
   </>
 )

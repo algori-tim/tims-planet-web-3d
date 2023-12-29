@@ -41,7 +41,7 @@ const useStore = create((set, get) => {
   let pathHelper = createPathHelper()
   let playerAnim
   let nextPlayerLocation = new THREE.Vector3(0, 27, 0)
-
+  let overlayType = 'sign'
   const setNextLocation = (next) => {
     nextPlayerLocation = next
   }
@@ -53,14 +53,18 @@ const useStore = create((set, get) => {
   return {
     entityManager,
     time,
+    overlayType,
+    cursorType,
     getNextLocation,
-    init(scene) {
+    init(scene, shouldAddHelpers = false) {
       if (navMesh) return
       const loader = new YUKA.NavMeshLoader()
       loader.load('./models/planet_nav.glb').then((navigationMesh) => {
         navMesh = new CustomNavMesh(navigationMesh)
-        // scene.add(createConvexRegionHelper(navMesh))
-        // scene.add(pathHelper)
+        if (shouldAddHelpers) {
+          scene.add(createConvexRegionHelper(navMesh))
+          scene.add(pathHelper)
+        }
       })
     },
     setYukaPlayer(playerMesh) {
@@ -78,13 +82,12 @@ const useStore = create((set, get) => {
     },
 
     setCursor(cursor) {
-      cursorType = cursor
+      set({ cursorType: cursor })
     },
     handleInteraction(event) {
       event.stopPropagation()
-
+      console.log(event.intersections)
       handleInteraction(cursorType, event.eventObject.name === '' ? event.object.name : event.eventObject.name)
-
       const groundIntersect = event.intersections.find((x) => x.object.name === 'grass')
       if (groundIntersect && cursorType === 'walk') {
         if (playerAnim) {
@@ -95,6 +98,35 @@ const useStore = create((set, get) => {
         playerAnim.play()
 
         player.animations.walk.play()
+        return
+      }
+
+      const signIntersect = event.intersections.find((x) => x.object.name.startsWith('tims_planet_sign'))
+      if (signIntersect && cursorType === 'look') {
+        set({ overlayType: 'sign' })
+        document.getElementById('overlay').style.display = 'flex'
+        return
+      }
+
+      const observatoryIntersect = event.intersections.find((x) => x.object.name.startsWith('observatory'))
+      if (observatoryIntersect && cursorType === 'look') {
+        set({ overlayType: 'observatory' })
+        document.getElementById('overlay').style.display = 'flex'
+        return
+      }
+
+      const factoryIntersect = event.intersections.find((x) => x.object.name.startsWith('factory'))
+      if (factoryIntersect && cursorType === 'look') {
+        set({ overlayType: 'factory' })
+        document.getElementById('overlay').style.display = 'flex'
+        return
+      }
+
+      const wellIntersect = event.intersections.find((x) => x.object.name.startsWith('well'))
+      if (wellIntersect && cursorType === 'look') {
+        set({ overlayType: 'well' })
+        document.getElementById('overlay').style.display = 'flex'
+        return
       }
     },
   }

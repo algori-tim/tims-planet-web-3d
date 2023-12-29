@@ -21,10 +21,9 @@ export default function Player() {
   const { nodes, materials, animations } = useGLTF('./models/astronaut.glb')
   const { actions } = useAnimations(animations, playerRef)
   const handleInteraction = useStore((store) => store.handleInteraction)
+  const cursorType = useStore((store) => store.cursorType)
   const setPlayer = useStore((store) => store.setPlayer)
   const getNextLocation = useStore((store) => store.getNextLocation)
-
-  const cameraOffset = new THREE.Vector3(0, 25, -25)
 
   useEffect(() => {
     setPlayer(playerRef.current, actions)
@@ -36,13 +35,18 @@ export default function Player() {
   useFrame(() => {
     if (playerRef.current) {
       const normal = playerRef.current.position.clone().normalize()
-      const offset = cameraOffset.clone().applyQuaternion(playerRef.current.quaternion)
-      const targetPosition = playerRef.current.position.clone().add(offset)
-      camera.position.lerp(targetPosition, 0.01) // Adjust lerp factor as needed
-      camera.lookAt(playerRef.current.position)
-      camera.up.copy(normal)
       playerRef.current.up.copy(normal)
       playerRef.current.rotation.setFromQuaternion(playerRef.current.quaternion)
+
+      if (cursorType === 'walk') {
+        // camera following behind player
+        const cameraOffset = new THREE.Vector3(0, 25, -25)
+        const offset = cameraOffset.clone().applyQuaternion(playerRef.current.quaternion)
+        const targetPosition = playerRef.current.position.clone().add(offset)
+        camera.position.lerp(targetPosition, 0.01)
+        camera.lookAt(playerRef.current.position)
+        camera.up.copy(normal)
+      }
       if (isEvenToFourDecimals(playerRef.current.position, getNextLocation())) return
       playerRef.current.lookAt(getNextLocation())
     }

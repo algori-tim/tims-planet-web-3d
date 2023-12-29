@@ -1,0 +1,11 @@
+.modal-content {
+  padding: 25px;
+  overflow-y: auto; /* Scroll as needed */
+  height: 100%; /* Adjust height as necessary */
+  /* Additional styling as needed */
+}
+
+.modal-header,
+.modal-subheader {
+  text-align: center;
+}
