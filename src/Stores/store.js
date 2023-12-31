@@ -24,7 +24,7 @@ const getAnimTimeline = (navMesh, player, pathHelper, target, setNextLocation) =
       y: path[i].y,
       z: path[i].z,
       ease: 'none',
-      duration: distance / 2,
+      duration: distance / 3,
       onStart: () => setNextLocation(next),
     })
   }
@@ -40,7 +40,7 @@ const useStore = create((set, get) => {
   let time = new YUKA.Time()
   let pathHelper = createPathHelper()
   let playerAnim
-  let nextPlayerLocation = new THREE.Vector3(0, 27, 0)
+  let nextPlayerLocation = new THREE.Vector3(0, 26.1, 0)
   let overlayType = 'sign'
   let playerPostion
   const setNextLocation = (next) => {
@@ -108,7 +108,8 @@ const useStore = create((set, get) => {
         return
       }
 
-      const signIntersect = event.intersections.find((x) => x.object.name.startsWith('tims_planet_sign'))
+      console.log(event.interactions)
+      const signIntersect = event.intersections.find((x) => x.object.name.startsWith('welcome_sign'))
       if (signIntersect && cursorType === 'look') {
         set({ overlayType: 'sign' })
         document.getElementById('overlay').style.display = 'flex'

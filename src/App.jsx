@@ -15,7 +15,7 @@ export default function App() {
   const orbitControlsRef = useRef()
 
   const [orbitEnabled, setOrbitEnabled] = useState(false)
-  init(scene)
+  init(scene, false)
 
   // useEffect(() => {
   //   if (cursorType !== 'walk') {
@@ -35,11 +35,8 @@ export default function App() {
   return (
     <>
       <OrbitControls
-        minPolarAngle={0}
-        maxPolarAngle={0}
-        enabled={orbitEnabled}
-        camera={camera}
-        enablePan={false}
+        enableRotate={false}
+        enableZoom={false}
         maxDistance={100}
         minDistance={50}
         ref={orbitControlsRef}

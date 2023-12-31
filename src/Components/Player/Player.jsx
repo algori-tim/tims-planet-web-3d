@@ -21,15 +21,14 @@ export default function Player() {
   const { nodes, materials, animations } = useGLTF('./models/astronaut.glb')
   const { actions } = useAnimations(animations, playerRef)
   const handleInteraction = useStore((store) => store.handleInteraction)
-  const cursorType = useStore((store) => store.cursorType)
   const setPlayer = useStore((store) => store.setPlayer)
   const nextPlayerLocation = useStore((store) => store.nextPlayerLocation)
   const setPlayerPosition = useStore((store) => store.setPlayerPosition)
 
   useEffect(() => {
     setPlayer(playerRef.current, actions)
-    playerRef.current.position.set(0, 27, 0)
-    playerRef.current.rotateY(2)
+    playerRef.current.position.set(0, 26.1, 0)
+    playerRef.current.rotateY(2.5)
     camera.position.set(0, 35, 0)
   }, [])
 
@@ -39,8 +38,8 @@ export default function Player() {
       playerRef.current.up.copy(normal)
       playerRef.current.rotation.setFromQuaternion(playerRef.current.quaternion)
 
-      // if (cursorType === 'walk') {
       // camera following behind player
+      // if (cursorType === 'walk') {
       const cameraOffset = new THREE.Vector3(0, 25, -25)
       const offset = cameraOffset.clone().applyQuaternion(playerRef.current.quaternion)
       const targetPosition = playerRef.current.position.clone().add(offset)
