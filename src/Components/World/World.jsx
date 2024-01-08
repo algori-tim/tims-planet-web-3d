@@ -11,10 +11,14 @@ export default function World() {
 
   const handleInteraction = useStore((store) => store.handleInteraction)
   return (
-    <group onClick={(e) => handleInteraction(e)}>
-      <mesh castShadow receiveShadow name='grass' geometry={nodes.planet_1.geometry} material={materials.planet_grass}>
-        {/* <meshStandardMaterial attach='material' color='#1BB81A' transparent={false} opacity={0.5} /> */}
-      </mesh>
+    <group castShadow receiveShadow onClick={(e) => handleInteraction(e)}>
+      <mesh
+        castShadow
+        receiveShadow
+        name='grass'
+        geometry={nodes.planet_1.geometry}
+        material={materials.planet_grass}
+      ></mesh>
       <mesh castShadow receiveShadow geometry={nodes.planet_4.geometry} material={materials.na_planet_grass} />
       <mesh
         castShadow
@@ -30,7 +34,8 @@ export default function World() {
         geometry={nodes.planet_3.geometry}
         material={materials.planet_dirt}
       ></mesh>
-      {/* <primitive object={trees.scene} /> */}
+      <mesh castShadow receiveShadow name='sand' geometry={nodes.planet_5.geometry} material={materials.planet_sand} />
+      <primitive castShadow receiveShadow object={trees.scene} />
       <primitive castShadow receiveShadow object={rocks.scene} />
       <Interactables />
     </group>

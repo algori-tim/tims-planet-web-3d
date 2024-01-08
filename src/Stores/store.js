@@ -41,12 +41,11 @@ const useStore = create((set, get) => {
   let pathHelper = createPathHelper()
   let playerAnim
   let nextPlayerLocation = new THREE.Vector3(0, 26.1, 0)
-  let overlayType = 'sign'
+  let overlayType = 'help'
   let playerPostion
   const setNextLocation = (next) => {
     set({ nextPlayerLocation: next })
   }
-
   return {
     entityManager,
     time,
@@ -95,7 +94,8 @@ const useStore = create((set, get) => {
       const cursorType = document.getElementById('root').getAttribute('data-cursor')
 
       handleQuipInteraction(cursorType, event.eventObject.name === '' ? event.object.name : event.eventObject.name)
-      const groundIntersect = event.intersections.find((x) => x.object.name === 'grass')
+      console.log()
+      const groundIntersect = event.intersections.find((x) => x.object.name === 'grass' || x.object.name === 'sand')
       if (groundIntersect && cursorType === 'walk') {
         if (playerAnim) {
           playerAnim.kill()
@@ -105,35 +105,6 @@ const useStore = create((set, get) => {
         playerAnim.play()
 
         player.animations.walk.play()
-        return
-      }
-
-      console.log(event.interactions)
-      const signIntersect = event.intersections.find((x) => x.object.name.startsWith('welcome_sign'))
-      if (signIntersect && cursorType === 'look') {
-        set({ overlayType: 'sign' })
-        document.getElementById('overlay').style.display = 'flex'
-        return
-      }
-
-      const observatoryIntersect = event.intersections.find((x) => x.object.name.startsWith('observatory'))
-      if (observatoryIntersect && cursorType === 'look') {
-        set({ overlayType: 'observatory' })
-        document.getElementById('overlay').style.display = 'flex'
-        return
-      }
-
-      const factoryIntersect = event.intersections.find((x) => x.object.name.startsWith('factory'))
-      if (factoryIntersect && cursorType === 'look') {
-        set({ overlayType: 'factory' })
-        document.getElementById('overlay').style.display = 'flex'
-        return
-      }
-
-      const wellIntersect = event.intersections.find((x) => x.object.name.startsWith('well'))
-      if (wellIntersect && cursorType === 'look') {
-        set({ overlayType: 'well' })
-        document.getElementById('overlay').style.display = 'flex'
         return
       }
     },

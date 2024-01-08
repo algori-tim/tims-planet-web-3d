@@ -22,12 +22,14 @@ export default function Interactables() {
       {lights && (
         <Selection>
           <EffectComposer multisampling={0}>
-            <SelectiveBloom lights={lights} radius={1} luminanceThreshold={0.2} intensity={2} />
+            <SelectiveBloom lights={lights} radius={1} luminanceThreshold={0.1} intensity={1} />
           </EffectComposer>
           <Interactable model='planet_sign' />
           <Interactable model='planet_observatory' />
           <Interactable model='planet_well' />
           <Interactable model='planet_factory' />
+          <Interactable model='planet_guitar' />
+          <Interactable model='planet_camper' />
         </Selection>
       )}
     </group>

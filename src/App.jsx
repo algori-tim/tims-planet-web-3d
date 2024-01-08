@@ -15,7 +15,7 @@ export default function App() {
   const orbitControlsRef = useRef()
 
   const [orbitEnabled, setOrbitEnabled] = useState(false)
-  init(scene, false)
+  init(scene, true)
 
   // useEffect(() => {
   //   if (cursorType !== 'walk') {
