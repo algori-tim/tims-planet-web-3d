@@ -9,8 +9,15 @@ export default function Interactable(props) {
   const [hovered, hover] = useState(false)
   const [isCursorLook, setIsCursorLook] = useState(false)
   const interactableRef = useRef()
+  const soundFxRef = useRef()
   const glb = useGLTF(`./models/${props.model}.glb`)
+  let audio = null
   const whiteMaterial = new MeshBasicMaterial({ color: '#ffffe6' })
+
+  useEffect(() => {
+    if (soundFxRef.current) return
+    soundFxRef.current = new Audio(`/audio/sound_fx/${props.sound}.mp3`)
+  }, [])
 
   useEffect(() => {
     setIsCursorLook(() => cursorType === 'look')
@@ -43,7 +50,8 @@ export default function Interactable(props) {
   }
 
   const handleClick = () => {
-    if (isCursorLook) {
+    if (isCursorLook && soundFxRef.current) {
+      soundFxRef.current.play()
       setOverlayType(props.model)
       document.getElementById('overlay').style.display = 'flex'
     }

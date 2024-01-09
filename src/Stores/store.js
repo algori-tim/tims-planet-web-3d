@@ -42,7 +42,7 @@ const useStore = create((set, get) => {
   let playerAnim
   let nextPlayerLocation = new THREE.Vector3(0, 26.1, 0)
   let overlayType = 'help'
-  let playerPostion
+  let playerWalking = new Audio('/audio/sound_fx/walking.mp3')
   const setNextLocation = (next) => {
     set({ nextPlayerLocation: next })
   }
@@ -97,11 +97,21 @@ const useStore = create((set, get) => {
       console.log()
       const groundIntersect = event.intersections.find((x) => x.object.name === 'grass' || x.object.name === 'sand')
       if (groundIntersect && cursorType === 'walk') {
+        console.log(groundIntersect.point)
         if (playerAnim) {
           playerAnim.kill()
         }
         playerAnim = getAnimTimeline(navMesh, player, pathHelper, groundIntersect.point, setNextLocation)
-        playerAnim.call(() => player.animations.walk.stop())
+        playerAnim.call(() => {
+          player.animations.walk.stop()
+
+          playerWalking.pause()
+        })
+
+        playerWalking.play()
+        playerWalking.loop = true
+        playerWalking.playbackRate = 0.65
+        playerWalking.volume = 0.8
         playerAnim.play()
 
         player.animations.walk.play()

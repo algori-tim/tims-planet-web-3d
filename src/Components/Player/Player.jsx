@@ -31,11 +31,6 @@ export default function Player() {
     playerRef.current.rotateY(2.5)
     camera.position.set(0, 35, 0)
   }, [])
-  const cameraOffset = new THREE.Vector3(0, 25, -25)
-
-  // Create Quaternion objects to store the camera's rotation
-  const currentCameraQuaternion = new THREE.Quaternion()
-  const targetCameraQuaternion = new THREE.Quaternion()
 
   useFrame(() => {
     if (playerRef.current) {
@@ -43,49 +38,20 @@ export default function Player() {
       playerRef.current.up.copy(normal)
       playerRef.current.rotation.setFromQuaternion(playerRef.current.quaternion)
 
-      // Calculate target position
+      // camera following behind player
+      // if (cursorType === 'walk') {
+      const cameraOffset = new THREE.Vector3(0, 25, -25)
       const offset = cameraOffset.clone().applyQuaternion(playerRef.current.quaternion)
       const targetPosition = playerRef.current.position.clone().add(offset)
-
-      // Use slerp to interpolate camera rotation
-      currentCameraQuaternion.copy(camera.quaternion)
-      targetCameraQuaternion.setFromUnitVectors(
-        camera.position.clone().normalize(),
-        targetPosition.clone().sub(camera.position).normalize()
-      )
-      camera.quaternion.slerp(targetCameraQuaternion, 0.00000005) // Adjust the slerp factor for rotation speed
-
-      // Update camera position using lerp
-      camera.position.lerp(targetPosition, 0.005)
+      camera.position.lerp(targetPosition, 0.01)
       camera.lookAt(playerRef.current.position)
       camera.up.copy(normal)
       setPlayerPosition(playerRef.current.position)
-
+      // }
       if (isEvenToFourDecimals(playerRef.current.position, nextPlayerLocation)) return
-
       playerRef.current.lookAt(nextPlayerLocation)
     }
   })
-  // useFrame(() => {
-  //   if (playerRef.current) {
-  //     const normal = playerRef.current.position.clone().normalize()
-  //     playerRef.current.up.copy(normal)
-  //     playerRef.current.rotation.setFromQuaternion(playerRef.current.quaternion)
-
-  //     // camera following behind player
-  //     // if (cursorType === 'walk') {
-  //     const cameraOffset = new THREE.Vector3(0, 25, -25)
-  //     const offset = cameraOffset.clone().applyQuaternion(playerRef.current.quaternion)
-  //     const targetPosition = playerRef.current.position.clone().add(offset)
-  //     camera.position.lerp(targetPosition, 0.01)
-  //     camera.lookAt(playerRef.current.position)
-  //     camera.up.copy(normal)
-  //     setPlayerPosition(playerRef.current.position)
-  //     // }
-  //     if (isEvenToFourDecimals(playerRef.current.position, nextPlayerLocation)) return
-  //     playerRef.current.lookAt(nextPlayerLocation)
-  //   }
-  // })
 
   return (
     <mesh name='player' onClick={(e) => handleInteraction(e)} ref={playerRef}>

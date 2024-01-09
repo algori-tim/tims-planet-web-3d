@@ -85,7 +85,7 @@ const getInteractionMessage = (cursor, interactionPoint) => {
   }
 
   if (cursor === 'walk') return "Unlike some boots, that's not made for walking."
-  if (cursor === 'look') return 'Stop looking at that!'
+  if (cursor === 'look') return 'Whoah...'
 }
 
 const handleIfKnownMultples = (interactionPoint) => {

@@ -24,12 +24,12 @@ export default function Interactables() {
           <EffectComposer multisampling={0}>
             <SelectiveBloom lights={lights} radius={1} luminanceThreshold={0.1} intensity={1} />
           </EffectComposer>
-          <Interactable model='planet_sign' />
-          <Interactable model='planet_observatory' />
-          <Interactable model='planet_well' />
-          <Interactable model='planet_factory' />
-          <Interactable model='planet_guitar' />
-          <Interactable model='planet_camper' />
+          <Interactable model='planet_sign' sound={'hello'} />
+          <Interactable model='planet_observatory' sound={'observatory'} />
+          <Interactable model='planet_well' sound={'well'} />
+          <Interactable model='planet_factory' sound={'factory'} />
+          <Interactable model='planet_guitar' sound={'guitar'} />
+          <Interactable model='planet_camper' sound={'camper'} />
         </Selection>
       )}
     </group>
