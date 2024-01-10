@@ -45,11 +45,18 @@ export default function Hud() {
   const handleSoundToggle = () => {
     setSoundOn((current) => !current)
   }
-
+  //TO DO:
+  //add contact and map for fast travel
+  //Sync sounds with zustand store
   return (
     <>
       <audio ref={buttonFxRef} src='/audio/sound_fx/button.mp3' autoPlay={false}></audio>
       <audio ref={musicRef} src='/audio/music/chillout.mp3' autoPlay={false} loop></audio>
+      <div className='settings'>
+        <button onClick={() => handleSettingsClick()} className='circle'>
+          <img className='icon' src='/icons/settings.svg' alt='look'></img>
+        </button>
+      </div>
       <div className='hud-messages-container hud'>
         <p className='hud-messages' id='hud-messages'></p>
       </div>

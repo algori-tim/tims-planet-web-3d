@@ -47,10 +47,17 @@
   position: absolute;
   bottom: 10px;
   left: 10px;
+  text-align: center;
   display: flex;
   justify-content: center;
-  align-items: center;
+}
+
+.settings {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 
 .hud-messages {
+  display: block;
 }

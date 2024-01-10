@@ -43,7 +43,7 @@ export default function Player() {
       const cameraOffset = new THREE.Vector3(0, 25, -25)
       const offset = cameraOffset.clone().applyQuaternion(playerRef.current.quaternion)
       const targetPosition = playerRef.current.position.clone().add(offset)
-      camera.position.lerp(targetPosition, 0.01)
+      camera.position.lerp(targetPosition, 0.005)
       camera.lookAt(playerRef.current.position)
       camera.up.copy(normal)
       setPlayerPosition(playerRef.current.position)

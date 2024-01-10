@@ -11,7 +11,7 @@ export default function World() {
 
   const handleInteraction = useStore((store) => store.handleInteraction)
   return (
-    <group castShadow receiveShadow onClick={(e) => handleInteraction(e)}>
+    <group castShadow receiveShadow onClick={(e) => handleInteraction(e)} onPointerOver={(e) => e.stopPropagation()}>
       <mesh
         castShadow
         receiveShadow

@@ -94,24 +94,27 @@ const useStore = create((set, get) => {
       const cursorType = document.getElementById('root').getAttribute('data-cursor')
 
       handleQuipInteraction(cursorType, event.eventObject.name === '' ? event.object.name : event.eventObject.name)
-      console.log()
-      const groundIntersect = event.intersections.find((x) => x.object.name === 'grass' || x.object.name === 'sand')
-      if (groundIntersect && cursorType === 'walk') {
-        console.log(groundIntersect.point)
+
+      if (event.intersections.length < 1) return
+
+      const walkableIntersections = ['grass', 'sand']
+      const firstIntersect = event.intersections[0]
+      if (walkableIntersections.includes(firstIntersect.object.name) && cursorType === 'walk') {
         if (playerAnim) {
           playerAnim.kill()
         }
-        playerAnim = getAnimTimeline(navMesh, player, pathHelper, groundIntersect.point, setNextLocation)
-        playerAnim.call(() => {
-          player.animations.walk.stop()
+        playerAnim = getAnimTimeline(navMesh, player, pathHelper, firstIntersect.point, setNextLocation)
 
+        playerAnim.call(() => {
+          //on animation end
+          player.animations.walk.stop()
           playerWalking.pause()
         })
 
-        playerWalking.play()
         playerWalking.loop = true
         playerWalking.playbackRate = 0.65
         playerWalking.volume = 0.8
+        playerWalking.play()
         playerAnim.play()
 
         player.animations.walk.play()

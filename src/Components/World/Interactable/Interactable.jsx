@@ -23,7 +23,7 @@ export default function Interactable(props) {
     setIsCursorLook(() => cursorType === 'look')
   }, [cursorType])
 
-  const handlePointerOver = () => {
+  const handlePointerOver = (e) => {
     if (isCursorLook) {
       hover(true)
       interactableRef.current.traverse((child) => {

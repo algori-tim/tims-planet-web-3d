@@ -19,7 +19,7 @@ export default function Interactables() {
 
   return (
     <group>
-      {lights && (
+      {lights.length > 0 && (
         <Selection>
           <EffectComposer multisampling={0}>
             <SelectiveBloom lights={lights} radius={1} luminanceThreshold={0.1} intensity={1} />
