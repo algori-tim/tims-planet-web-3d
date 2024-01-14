@@ -8,6 +8,13 @@ export default function World() {
   const { nodes, materials } = useGLTF('./models/planet.glb')
   const trees = useGLTF('./models/planet_trees.glb')
   const rocks = useGLTF('./models/planet_rocks.glb')
+  const satellite = useGLTF('./models/planet_satellite.glb')
+  const satelliteRef = useRef()
+  useFrame(() => {
+    if (satelliteRef.current) {
+      satelliteRef.current.rotation.y = satelliteRef.current.rotation.y + 0.001
+    }
+  })
 
   const handleInteraction = useStore((store) => store.handleInteraction)
   return (
@@ -37,6 +44,7 @@ export default function World() {
       <mesh castShadow receiveShadow name='sand' geometry={nodes.planet_5.geometry} material={materials.planet_sand} />
       <primitive castShadow receiveShadow object={trees.scene} />
       <primitive castShadow receiveShadow object={rocks.scene} />
+      <primitive ref={satelliteRef} castShadow receiveShadow object={satellite.scene} />
       <Interactables />
     </group>
   )

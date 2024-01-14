@@ -22,7 +22,7 @@ export default function Interactables() {
       {lights.length > 0 && (
         <Selection>
           <EffectComposer multisampling={0}>
-            <SelectiveBloom lights={lights} radius={1} luminanceThreshold={0.1} intensity={1} />
+            <SelectiveBloom lights={lights} radius={1} luminanceThreshold={0.1} intensity={0.25} />
           </EffectComposer>
           <Interactable model='planet_sign' sound={'hello'} />
           <Interactable model='planet_observatory' sound={'observatory'} />

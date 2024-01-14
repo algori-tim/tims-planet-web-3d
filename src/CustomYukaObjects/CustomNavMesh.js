@@ -79,10 +79,52 @@ export class CustomNavMesh extends NavMesh {
         }
 
         corridor.push(to, to)
-        path.push(...this.generateMidPath(corridor.portalEdges))
+        // path.push(...this.generateMidPath(corridor.portalEdges))
+        path.push(...this.findShortestPath(corridor.portalEdges))
       }
 
       return path
     }
+  }
+
+  distance(p1, p2) {
+    return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2))
+  }
+
+  interpolate(p1, p2, t) {
+    return {
+      x: p1.x + (p2.x - p1.x) * t,
+      y: p1.y + (p2.y - p1.y) * t,
+      z: p1.z + (p2.z - p1.z) * t,
+    }
+  }
+
+  findShortestPath(portalEdges) {
+    console.log(portalEdges)
+    let path = [portalEdges[0].left] // start with the first left point
+
+    for (let i = 0; i < portalEdges.length - 2; i++) {
+      let currentPoint = path[path.length - 1]
+      let nextCorridorPoints = this.getCorridorPoints(portalEdges[i + 1])
+      let nextPoint = nextCorridorPoints.reduce((closest, point) => {
+        return this.distance(currentPoint, point) < this.distance(currentPoint, closest) ? point : closest
+      })
+
+      path.push(nextPoint)
+    }
+
+    path.push(portalEdges[portalEdges.length - 1].left)
+
+    return path
+  }
+
+  getCorridorPoints(corridor) {
+    let points = []
+    points.push(corridor.left) // left endpoint
+    points.push(this.interpolate(corridor.left, corridor.right, 0.25)) // 1/4th
+    points.push(this.interpolate(corridor.left, corridor.right, 0.5)) // midpoint
+    points.push(this.interpolate(corridor.left, corridor.right, 0.75)) // 3/4th
+    points.push(corridor.right) // right endpoint
+    return points
   }
 }

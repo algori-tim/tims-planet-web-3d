@@ -20,34 +20,41 @@ export default function Player() {
   const { camera } = useThree()
   const { nodes, materials, animations } = useGLTF('./models/astronaut.glb')
   const { actions } = useAnimations(animations, playerRef)
-  const handleInteraction = useStore((store) => store.handleInteraction)
-  const setPlayer = useStore((store) => store.setPlayer)
-  const nextPlayerLocation = useStore((store) => store.nextPlayerLocation)
   const setPlayerPosition = useStore((store) => store.setPlayerPosition)
+  const { handleInteraction, nextPlayerLocation, isFastTraveling } = useStore()
+  const initPlayer = useStore((store) => store.initPlayer)
 
   useEffect(() => {
-    setPlayer(playerRef.current, actions)
+    initPlayer(playerRef.current, actions, setNewPlayerLocation)
     playerRef.current.position.set(0, 26.1, 0)
     playerRef.current.rotateY(2.5)
-    camera.position.set(0, 35, 0)
+    camera.position.set(0, 45.1, 0)
   }, [])
+
+  const setNewPlayerLocation = (newPosition) => {
+    playerRef.current.position.copy(newPosition)
+    const normal = playerRef.current.position.clone().normalize()
+    playerRef.current.up.copy(normal)
+    playerRef.current.rotation.setFromQuaternion(playerRef.current.quaternion)
+  }
 
   useFrame(() => {
     if (playerRef.current) {
       const normal = playerRef.current.position.clone().normalize()
       playerRef.current.up.copy(normal)
       playerRef.current.rotation.setFromQuaternion(playerRef.current.quaternion)
-
-      // camera following behind player
-      // if (cursorType === 'walk') {
-      const cameraOffset = new THREE.Vector3(0, 25, -25)
+      const cameraOffset = new THREE.Vector3(0, 20, -15)
       const offset = cameraOffset.clone().applyQuaternion(playerRef.current.quaternion)
       const targetPosition = playerRef.current.position.clone().add(offset)
-      camera.position.lerp(targetPosition, 0.005)
+      if (isFastTraveling) {
+        console.log('fast')
+        camera.position.copy(targetPosition)
+      } else {
+        camera.position.lerp(targetPosition, 0.008)
+      }
       camera.lookAt(playerRef.current.position)
-      camera.up.copy(normal)
+      camera.up.copy(playerRef.current.position.clone().normalize())
       setPlayerPosition(playerRef.current.position)
-      // }
       if (isEvenToFourDecimals(playerRef.current.position, nextPlayerLocation)) return
       playerRef.current.lookAt(nextPlayerLocation)
     }

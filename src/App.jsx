@@ -34,13 +34,7 @@ export default function App() {
 
   return (
     <>
-      <OrbitControls
-        enableRotate={false}
-        enableZoom={false}
-        maxDistance={100}
-        minDistance={50}
-        ref={orbitControlsRef}
-      />
+      <OrbitControls enableRotate={true} enableZoom={true} maxDistance={100} minDistance={50} ref={orbitControlsRef} />
       <group ref={lightRef}>
         <Background />
         <directionalLight position={[1, 2, 3]} intensity={2} />

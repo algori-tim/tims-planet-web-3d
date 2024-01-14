@@ -2,17 +2,31 @@ import { useGLTF } from '@react-three/drei'
 import useStore from '../../../Stores/store'
 import { Select } from '@react-three/postprocessing'
 import { useEffect, useRef, useState } from 'react'
-import { MeshBasicMaterial } from 'three'
+import { Mesh, MeshBasicMaterial } from 'three'
 
 export default function Interactable(props) {
   const { handleInteraction, setOverlayType, cursorType } = useStore()
   const [hovered, hover] = useState(false)
   const [isCursorLook, setIsCursorLook] = useState(false)
   const interactableRef = useRef()
+  const duplicateRef = useRef()
   const soundFxRef = useRef()
   const glb = useGLTF(`./models/${props.model}.glb`)
-  let audio = null
-  const whiteMaterial = new MeshBasicMaterial({ color: '#ffffe6' })
+  const glowMaterial = new MeshBasicMaterial({ color: '#ffff99', opacity: '.25', transparent: 'true' })
+
+  useEffect(() => {
+    if (interactableRef.current) {
+      const duplicate = interactableRef.current.clone(true)
+      duplicate.traverse((child) => {
+        if (child.isMesh) {
+          child.material = glowMaterial
+        }
+      })
+      duplicate.scale.set(0, 0, 0)
+      duplicateRef.current = duplicate
+      interactableRef.current.parent.add(duplicate)
+    }
+  }, [interactableRef.current])
 
   useEffect(() => {
     if (soundFxRef.current) return
@@ -25,27 +39,20 @@ export default function Interactable(props) {
 
   const handlePointerOver = (e) => {
     if (isCursorLook) {
+      if (duplicateRef.current) {
+        console.log(duplicateRef.current)
+        duplicateRef.current.scale.set(1, 1, 1)
+      }
       hover(true)
-      interactableRef.current.traverse((child) => {
-        if (child.isMesh) {
-          // Store the original material
-          child.userData.originalMaterial = child.material
-          // Apply the white material
-          child.material = whiteMaterial
-        }
-      })
     }
   }
 
   const handlePointerOut = () => {
     if (hovered) {
+      if (duplicateRef.current) {
+        duplicateRef.current.scale.set(0, 0, 0)
+      }
       hover(false)
-      interactableRef.current.traverse((child) => {
-        if (child.isMesh && child.userData.originalMaterial) {
-          // Revert to the original material
-          child.material = child.userData.originalMaterial
-        }
-      })
     }
   }
 

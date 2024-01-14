@@ -12,7 +12,7 @@
 }
 
 main {
-  width: 50%;
+  width: 40%;
   height: 80%;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
@@ -61,4 +61,52 @@ main {
 element {
   scrollbar-width: thin; /* 'auto' or 'thin' */
   scrollbar-color: #888 transparent; /* Thumb and track color */
+}
+.modal-body {
+  margin: 50px 0;
+}
+
+.fast-travel-list {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: space-around;
+  row-gap: 50px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block; /* or 'block', depending on layout */
+  cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+  opacity: 0;
+  width: 120px;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  text-transform: uppercase;
+  font-weight: bolder;
+  text-shadow: 2px 2px 5px black;
+  /* Position the tooltip */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none; /* Prevents mouse events on the tooltip */
+
+  /* Transition effect */
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  opacity: 1;
 }

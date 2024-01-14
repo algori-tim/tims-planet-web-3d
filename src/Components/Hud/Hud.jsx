@@ -7,6 +7,7 @@ export default function Hud() {
   const setOverlayType = useStore((store) => store.setOverlayType)
   const [soundOn, setSoundOn] = useState(true)
   const [musicOn, setMusicOn] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const musicRef = useRef()
   const buttonFxRef = useRef()
 
@@ -38,12 +39,29 @@ export default function Hud() {
     setOverlayType('help')
   }
 
+  const handleGetInTouch = () => {
+    handleButtonSound()
+    setOverlayType('get_in_touch')
+  }
+
+  const handleFastTravel = () => {
+    handleButtonSound()
+    setOverlayType('fast_travel')
+  }
+
   const handleMusicToggle = () => {
+    handleButtonSound()
     setMusicOn((current) => !current)
   }
 
   const handleSoundToggle = () => {
+    handleButtonSound()
     setSoundOn((current) => !current)
+  }
+
+  const handleMenuClick = () => {
+    handleButtonSound()
+    setMenuOpen((current) => !current)
   }
   //TO DO:
   //add contact and map for fast travel
@@ -52,12 +70,41 @@ export default function Hud() {
     <>
       <audio ref={buttonFxRef} src='/audio/sound_fx/button.mp3' autoPlay={false}></audio>
       <audio ref={musicRef} src='/audio/music/chillout.mp3' autoPlay={false} loop></audio>
-      <div className='settings'>
-        <button onClick={() => handleSettingsClick()} className='circle'>
-          <img className='icon' src='/icons/settings.svg' alt='look'></img>
+      <div id='hud' className='menu'>
+        <button onClick={() => handleMenuClick()} className='circle '>
+          <img
+            className='icon'
+            id='menu-icon'
+            src={`${menuOpen ? '/icons/close.svg' : '/icons/menu.svg'}`}
+            alt='look'
+          ></img>
         </button>
+        <div className={`menu-items ${menuOpen ? 'open' : ''}`}>
+          <button onClick={handleMusicToggle} className='menu-item'>
+            <img
+              className='icon menu-icon'
+              src={musicOn ? '/icons/music_off.svg' : '/icons/music_on.svg'}
+              alt='talk'
+            ></img>
+            <p className='menu-item-text'>turn music {musicOn ? 'off' : 'on'}</p>
+          </button>
+          <button onClick={handleSoundToggle} className='menu-item'>
+            <img className='icon' src={soundOn ? '/icons/sound_off.svg' : '/icons/sound_on.svg'} alt='talk'></img>
+            <p className='menu-item-text'>turn sound {soundOn ? 'off' : 'on'}</p>
+          </button>
+          <button onClick={handleGetInTouch} className='menu-item'>
+            <img className='icon' src='/icons/contact.svg' alt='grab'></img>
+            <p className='menu-item-text'>Get in Touch</p>
+          </button>
+          <button onClick={handleQuestion} className='menu-item'>
+            <img className='icon' src='/icons/question_mark.svg' alt='grab'></img>
+            <p className='menu-item-text'>What is this?</p>
+          </button>
+        </div>
       </div>
+
       <div className='hud-messages-container hud'>
+        <img className='' src='/icons/speech.svg' alt='speech'></img>
         <p className='hud-messages' id='hud-messages'></p>
       </div>
       <div className='toggles-container hud'>
@@ -68,14 +115,8 @@ export default function Hud() {
           <button onClick={() => handleWalkLookClick('walk')} className='circle'>
             <img className='icon' src='/icons/walk.svg' alt='walk'></img>
           </button>
-          <button onClick={handleMusicToggle} className='circle'>
-            <img className='icon' src={musicOn ? '/icons/music_off.svg' : '/icons/music_on.svg'} alt='talk'></img>
-          </button>
-          <button onClick={handleSoundToggle} className='circle'>
-            <img className='icon' src={soundOn ? '/icons/sound_off.svg' : '/icons/sound_on.svg'} alt='talk'></img>
-          </button>
-          <button onClick={handleQuestion} className='circle'>
-            <img className='icon' src='/icons/question_mark.svg' alt='grab'></img>
+          <button onClick={handleFastTravel} className='circle'>
+            <img className='icon' src='/icons/map.svg' alt='look'></img>
           </button>
         </div>
       </div>

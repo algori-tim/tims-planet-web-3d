@@ -2,16 +2,16 @@
   border: solid 3px white;
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 25px;
-  height: 75px;
-  width: 520px;
   color: white;
   font-size: large;
 }
 
 .toggles-container {
+  height: 75px;
   position: absolute;
   bottom: 10px;
-  right: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,27 +37,86 @@
   border: solid 4px white;
 }
 
-.circle:hover {
-  background-color: goldenrod;
+.circle:hover,
+.menu-item:hover {
+  background-color: rgba(206, 171, 83, 0.589);
   cursor: pointer;
 }
 
 .hud-messages-container {
+  width: 600px;
   font-family: 'Teko', sans-serif;
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  height: 75px;
+  top: 10px;
+  right: 10px;
   text-align: center;
   display: flex;
-  justify-content: center;
-}
-
-.settings {
-  position: absolute;
-  right: 10px;
-  top: 10px;
+  justify-content: space-between;
+  padding: 0 20px;
 }
 
 .hud-messages {
   display: block;
+  align-self: center;
+  flex-grow: 1;
+  justify-self: center;
+}
+
+.menu {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+.menu-items {
+  margin-top: 20px;
+  height: 300px;
+  width: 0; /* Default width when closed */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  overflow: hidden; /* Hide overflow content when closed */
+  transition: width 0.5s ease; /* Smooth transition for width */
+}
+
+.menu-item-text {
+  align-self: center;
+  flex-grow: 1;
+  text-transform: uppercase;
+}
+
+.menu-items.open {
+  width: 350px; /* Set the expanded width */
+}
+
+.menu-item {
+  display: flex;
+  padding: 0 20px;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 20px 0 20px;
+  width: 300px;
+  height: 60px;
+  border-radius: 30px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: solid 4px white;
+  color: white;
+  font-size: large;
+}
+
+.vr-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    transparent 0%,
+    rgba(0, 0, 0, 0.5) 15%,
+    rgba(0, 0, 0, 0.8) 30%,
+    rgba(0, 0, 0, 1) 50%
+  );
+  pointer-events: none;
 }

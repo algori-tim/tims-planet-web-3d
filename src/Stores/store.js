@@ -7,7 +7,7 @@ import { handleQuipInteraction } from '../Data/interactions'
 import { getDistance } from '../Helpers/mathHelpers'
 import gsap from 'gsap'
 
-const getAnimTimeline = (navMesh, player, pathHelper, target, setNextLocation) => {
+const getAnimTimeline = (navMesh, player, pathHelper, target, setNextLocation, speedMultiplyer = 0) => {
   const path = getPath(navMesh, player.mesh.position, target)
   if (pathHelper) {
     pathHelper.visible = true
@@ -24,7 +24,7 @@ const getAnimTimeline = (navMesh, player, pathHelper, target, setNextLocation) =
       y: path[i].y,
       z: path[i].z,
       ease: 'none',
-      duration: distance / 3,
+      duration: (distance / 3) * speedMultiplyer,
       onStart: () => setNextLocation(next),
     })
   }
@@ -43,8 +43,50 @@ const useStore = create((set, get) => {
   let nextPlayerLocation = new THREE.Vector3(0, 26.1, 0)
   let overlayType = 'help'
   let playerWalking = new Audio('/audio/sound_fx/walking.mp3')
+  let setNewPlayerLocation
+  let isFastTraveling = false
+
   const setNextLocation = (next) => {
     set({ nextPlayerLocation: next })
+  }
+
+  const setTravel = (destination, speedMultiplyer = 1) => {
+    if (playerAnim) {
+      playerAnim.kill()
+    }
+    playerAnim = getAnimTimeline(navMesh, player, pathHelper, destination, setNextLocation, speedMultiplyer)
+
+    playerAnim.call(() => {
+      //on animation end
+      player.animations.walk.stop()
+      playerWalking.pause()
+      set({ isFastTraveling: false })
+      document.getElementById('hud').classList.remove('vr-overlay')
+    })
+
+    playerWalking.loop = true
+    playerWalking.playbackRate = 0.65
+    playerWalking.volume = 0.8
+    playerWalking.play()
+    playerAnim.play()
+
+    player.animations.walk.play()
+    return
+  }
+
+  const handleInteraction = (event) => {
+    event.stopPropagation()
+    const cursorType = document.getElementById('root').getAttribute('data-cursor')
+
+    handleQuipInteraction(cursorType, event.eventObject.name === '' ? event.object.name : event.eventObject.name)
+
+    if (event.intersections.length < 1) return
+
+    const walkableIntersections = ['grass', 'sand']
+    const firstIntersect = event.intersections[0]
+    if (walkableIntersections.includes(firstIntersect.object.name) && cursorType === 'walk') {
+      setTravel(firstIntersect.point)
+    }
   }
   return {
     entityManager,
@@ -52,6 +94,19 @@ const useStore = create((set, get) => {
     overlayType,
     cursorType,
     nextPlayerLocation,
+    setNewPlayerLocation,
+    isFastTraveling,
+    handleInteraction,
+    fastTravel(destination) {
+      set({ isFastTraveling: true })
+      setTravel(destination, 0.08)
+    },
+    setPlayerLocation(location) {
+      player.mesh.position.copy(location)
+      const normal = location.clone().normalize()
+      player.mesh.up.copy(normal)
+      player.mesh.rotation.setFromQuaternion(player.mesh.quaternion)
+    },
     init(scene, shouldAddHelpers = false) {
       if (navMesh) return
       const loader = new YUKA.NavMeshLoader()
@@ -68,7 +123,8 @@ const useStore = create((set, get) => {
 
       playerVehicle = initPlayerVehicle(navMesh, playerMesh, entityManager)
     },
-    setPlayer(playerMesh, playerAnimations) {
+    initPlayer(playerMesh, playerAnimations, setNewPlayerLocation) {
+      set({ setNewPlayerLocation: setNewPlayerLocation })
       player = {
         mesh: playerMesh,
         animations: playerAnimations,
@@ -87,39 +143,6 @@ const useStore = create((set, get) => {
 
     setOverlayType(overlay) {
       set({ overlayType: overlay })
-    },
-
-    handleInteraction(event) {
-      event.stopPropagation()
-      const cursorType = document.getElementById('root').getAttribute('data-cursor')
-
-      handleQuipInteraction(cursorType, event.eventObject.name === '' ? event.object.name : event.eventObject.name)
-
-      if (event.intersections.length < 1) return
-
-      const walkableIntersections = ['grass', 'sand']
-      const firstIntersect = event.intersections[0]
-      if (walkableIntersections.includes(firstIntersect.object.name) && cursorType === 'walk') {
-        if (playerAnim) {
-          playerAnim.kill()
-        }
-        playerAnim = getAnimTimeline(navMesh, player, pathHelper, firstIntersect.point, setNextLocation)
-
-        playerAnim.call(() => {
-          //on animation end
-          player.animations.walk.stop()
-          playerWalking.pause()
-        })
-
-        playerWalking.loop = true
-        playerWalking.playbackRate = 0.65
-        playerWalking.volume = 0.8
-        playerWalking.play()
-        playerAnim.play()
-
-        player.animations.walk.play()
-        return
-      }
     },
   }
 })
