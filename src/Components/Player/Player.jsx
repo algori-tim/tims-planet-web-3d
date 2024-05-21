@@ -43,15 +43,18 @@ export default function Player() {
       const normal = playerRef.current.position.clone().normalize()
       playerRef.current.up.copy(normal)
       playerRef.current.rotation.setFromQuaternion(playerRef.current.quaternion)
+
       const cameraOffset = new THREE.Vector3(0, 20, -15)
       const offset = cameraOffset.clone().applyQuaternion(playerRef.current.quaternion)
       const targetPosition = playerRef.current.position.clone().add(offset)
+
       if (isFastTraveling) {
-        console.log('fast')
+        console.log('fast travel')
         camera.position.copy(targetPosition)
       } else {
         camera.position.lerp(targetPosition, 0.008)
       }
+
       camera.lookAt(playerRef.current.position)
       camera.up.copy(playerRef.current.position.clone().normalize())
       setPlayerPosition(playerRef.current.position)

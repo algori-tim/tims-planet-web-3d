@@ -1,4 +1,4 @@
-const interactionMatrix = new Map()
+const interactionMatrix = new Map<string, string[]>()
 
 interactionMatrix.set('look_grass', [
   "It's so green...",
@@ -73,7 +73,7 @@ interactionMatrix.set('walk_space', [
   'Heading to the final frontier, are we? Watch out for asteroids!',
 ])
 
-const getInteractionMessage = (cursor, interactionPoint) => {
+const getInteractionMessage = (cursor: string, interactionPoint: string) => {
   const messages = interactionMatrix.get(`${cursor}_${interactionPoint}`)
 
   if (messages) {
@@ -85,10 +85,10 @@ const getInteractionMessage = (cursor, interactionPoint) => {
   }
 
   if (cursor === 'walk') return "Unlike some boots, that's not made for walking."
-  if (cursor === 'look') return 'Whoah...'
+  return 'Whoah...'
 }
 
-const handleIfKnownMultples = (interactionPoint) => {
+const handleIfKnownMultples = (interactionPoint: string) => {
   console.log('interactionPoint', interactionPoint)
   if (interactionPoint.startsWith('og_tree')) return 'tree'
   if (interactionPoint.startsWith('rock')) return 'rock'
@@ -96,11 +96,9 @@ const handleIfKnownMultples = (interactionPoint) => {
   return interactionPoint
 }
 
-export const handleQuipInteraction = (cursor, interactionPoint) => {
+export const handleQuipInteraction = (cursor: string, interactionPoint: string) => {
   if (interactionPoint.startsWith('well')) return
 
-  document.getElementById('hud-messages').innerHTML = getInteractionMessage(
-    cursor,
-    handleIfKnownMultples(interactionPoint)
-  )
+  const hudMessages = document.getElementById('hud-messages') as HTMLElement
+  hudMessages.innerHTML = getInteractionMessage(cursor, handleIfKnownMultples(interactionPoint))
 }
