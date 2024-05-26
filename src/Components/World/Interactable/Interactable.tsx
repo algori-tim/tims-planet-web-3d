@@ -4,6 +4,7 @@ import { Select } from '@react-three/postprocessing'
 import React, { useEffect, useRef, useState } from 'react'
 import { Mesh, MeshBasicMaterial, Object3D } from 'three'
 import useAudioStore from '../../../Stores/audioStore'
+import useUIStore from '../../../Stores/uiStore'
 
 export interface InteractableProps {
   model: string
@@ -14,7 +15,8 @@ function isMesh(obj: Object3D): obj is Mesh {
 }
 
 export default function Interactable(props: InteractableProps) {
-  const { handleInteraction, setOverlayType, cursorType } = useStore()
+  const { setOverlayType, cursorType } = useUIStore()
+  const { handleInteraction } = useStore()
   const [hovered, hover] = useState(false)
   const [isCursorLook, setIsCursorLook] = useState(false)
   const interactableRef = useRef<Mesh>(null!)

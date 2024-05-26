@@ -4,36 +4,9 @@ import * as THREE from 'three'
 import { createConvexRegionHelper, createPathHelper, getPath, initPlayerVehicle } from '../Helpers/yukaHelpers'
 import { CustomNavMesh } from '../CustomYukaObjects/CustomNavMesh'
 import { handleQuipInteraction } from '../Data/interactions'
-import { getDistance } from '../Helpers/mathHelpers'
-import gsap from 'gsap'
-import useAudioStore from './audioStore'
-
-const getAnimTimeline = (navMesh, player, pathHelper, target, setNextLocation, speedMultiplyer = 0) => {
-  const path = getPath(navMesh, player.mesh.position, target)
-  if (pathHelper) {
-    pathHelper.visible = true
-    pathHelper.geometry.dispose()
-    pathHelper.geometry = new THREE.BufferGeometry().setFromPoints(path)
-  }
-
-  const tl = gsap.timeline()
-  for (let i = 1; i < path.length; i++) {
-    const next = new THREE.Vector3().copy(path[i])
-    var distance = getDistance(path[i - 1], path[i])
-    tl.to(player.mesh.position, {
-      x: path[i].x,
-      y: path[i].y,
-      z: path[i].z,
-      ease: 'none',
-      duration: (distance / 3) * speedMultiplyer,
-      onStart: () => setNextLocation(next),
-    })
-  }
-  return tl
-}
+import { getAnimTimeline } from '../Helpers/animationHelpers'
 
 const useStore = create((set, get) => {
-  let cursorType = document.getElementById('root').getAttribute('data-cursor')
   let navMesh
   let playerVehicle
   let player
@@ -42,7 +15,6 @@ const useStore = create((set, get) => {
   let pathHelper = createPathHelper()
   let playerAnim
   let nextPlayerLocation = new THREE.Vector3(0, 26.1, 0)
-  let overlayType = 'help'
 
   let setNewPlayerLocation
   let isFastTraveling = false
@@ -86,8 +58,6 @@ const useStore = create((set, get) => {
   return {
     entityManager,
     time,
-    overlayType,
-    cursorType,
     nextPlayerLocation,
     setNewPlayerLocation,
     isFastTraveling,
@@ -127,17 +97,8 @@ const useStore = create((set, get) => {
       }
       player.animations.idle.play()
     },
-
-    setCursor(cursor) {
-      set({ cursorType: cursor })
-    },
-
     setPlayerPosition(position) {
       set({ playerPostion: position })
-    },
-
-    setOverlayType(overlay) {
-      set({ overlayType: overlay })
     },
   }
 })

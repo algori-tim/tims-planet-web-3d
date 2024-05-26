@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react'
-import useStore from '../../Stores/store'
-import './contextModal.css'
 import TimsPlanetSign from './ModalContent/TimsPlanetSign'
 import ProfessionalObservatory from './ModalContent/ProfessionalObservatory'
 import FascinationFactory from './ModalContent/FascinationFactory'
@@ -11,11 +9,12 @@ import Guitar from './ModalContent/Guitar'
 import GetInTouch from './ModalContent/GetInTouch'
 import FastTravel from './ModalContent/FastTravel'
 import useAudioStore from '../../Stores/audioStore'
+import useUIStore from '../../Stores/uiStore'
+import './contextModal.css'
 
 export default function ContextModal() {
   const { handleShimmerDownSound } = useAudioStore()
-  const overlayType = useStore((store) => store.overlayType)
-  const setOverlayType = useStore((store) => store.setOverlayType)
+  const { setOverlayType, overlayType } = useUIStore()
   console.log(overlayType)
 
   useEffect(() => {

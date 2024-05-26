@@ -1,12 +1,11 @@
 import React, { useRef, useState } from 'react'
 import './hud.css'
-import useStore from '../../Stores/store'
 import useAudioStore from '../../Stores/audioStore'
+import useUIStore from '../../Stores/uiStore'
 
 export default function Hud() {
   const { musicOn, soundsOn, toggleSounds, toggleMusic } = useAudioStore()
-  const setCursor = useStore((store) => store.setCursor)
-  const setOverlayType = useStore((store) => store.setOverlayType)
+  const { setOverlayType, setCursor } = useUIStore()
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
   const musicRef = useRef<HTMLAudioElement>(null!)
   const { handleButtonSound, handleShimmerUpSound } = useAudioStore()
