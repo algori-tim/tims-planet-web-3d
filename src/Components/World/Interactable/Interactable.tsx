@@ -1,7 +1,7 @@
 import { useGLTF } from '@react-three/drei'
 import usePlayerStore from '../../../Stores/playerStore'
 import { Select } from '@react-three/postprocessing'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Mesh, MeshBasicMaterial, Object3D } from 'three'
 import useAudioStore from '../../../Stores/audioStore'
 import useUIStore from '../../../Stores/uiStore'
@@ -43,7 +43,7 @@ export default function Interactable(props: InteractableProps) {
     setIsCursorLook(() => cursorType === 'look')
   }, [cursorType])
 
-  const handlePointerOver = (e) => {
+  const handlePointerOver = () => {
     if (isCursorLook) {
       if (duplicateRef.current) {
         console.log(duplicateRef.current)

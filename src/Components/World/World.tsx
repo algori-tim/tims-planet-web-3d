@@ -1,7 +1,7 @@
 import { useGLTF } from '@react-three/drei'
 import usePlayerStore from '../../Stores/playerStore'
 import Interactables from './Interactables/Interactables'
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Material, Mesh } from 'three'
 

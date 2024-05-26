@@ -1,11 +1,12 @@
 import * as THREE from 'three'
-import { getPath } from '../Helpers/yukaHelpers'
+import { getPath } from './yukaHelpers'
 import { getDistance } from './mathHelpers'
 import gsap from 'gsap'
+import { Player } from '../Stores/playerStore'
 
 export const getAnimTimeline = (
-  navMesh,
-  player,
+  navMesh: any,
+  player: Player,
   pathHelper: THREE.Line,
   target: THREE.Vector3,
   setNextLocation: (location: THREE.Vector3) => void,

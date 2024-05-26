@@ -1,5 +1,5 @@
 import { Selection, EffectComposer, SelectiveBloom } from '@react-three/postprocessing'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useThree } from '@react-three/fiber'
 import Interactable from '../Interactable/Interactable'
 import { Light, Object3D } from 'three'

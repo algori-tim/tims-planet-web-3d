@@ -1,7 +1,6 @@
 import { Stars } from '@react-three/drei'
 import usePlayerStore from '../../Stores/playerStore'
 import * as THREE from 'three'
-import React from 'react'
 
 export default function Background() {
   const handleInteraction = usePlayerStore((store) => store.handleInteraction)

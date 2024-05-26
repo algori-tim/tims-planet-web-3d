@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import * as YUKA from 'yuka'
 import * as THREE from 'three'
 import { handleQuipInteraction } from '../Data/interactions'
 import { getAnimTimeline } from '../Helpers/animationHelpers'
@@ -7,7 +6,7 @@ import useAudioStore from './audioStore'
 import { ThreeEvent } from '@react-three/fiber'
 import useSceneStore from './sceneStore'
 
-interface Player {
+export interface Player {
   mesh: THREE.Mesh
   animations: any
   state: string
@@ -29,7 +28,6 @@ interface PlaterState {
 }
 
 const usePlayerStore = create<PlaterState>((set, get) => {
-  const entityManager = new YUKA.EntityManager()
   let playerAnim: any
   const nextPlayerLocation = new THREE.Vector3(0, 26.1, 0)
 
@@ -44,7 +42,10 @@ const usePlayerStore = create<PlaterState>((set, get) => {
     }
     const { player } = get()
     const { pathHelper, navMesh } = useSceneStore.getState()
-    playerAnim = getAnimTimeline(navMesh, player, pathHelper, destination, setNextLocation, speedMultiplier)
+
+    if (player) {
+      playerAnim = getAnimTimeline(navMesh, player, pathHelper, destination, setNextLocation, speedMultiplier)
+    }
 
     // On animation end
     playerAnim.call(() => {
@@ -79,7 +80,6 @@ const usePlayerStore = create<PlaterState>((set, get) => {
     nextPlayerLocation,
     setNewPlayerLocation: null,
     isFastTraveling: false,
-    entityManager,
     handleInteraction,
     fastTravel(destination: THREE.Vector3) {
       set({ isFastTraveling: true })

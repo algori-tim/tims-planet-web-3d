@@ -1,6 +1,6 @@
 import { useAnimations, useGLTF } from '@react-three/drei'
 import usePlayerStore from '../../Stores/playerStore'
-import React, { useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Vector3, Quaternion, Matrix4, Mesh, Material, AnimationClip, SkinnedMesh, Bone } from 'three'
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect, MouseEvent } from 'react'
 import TimsPlanetSign from './ModalContent/TimsPlanetSign'
 import ProfessionalObservatory from './ModalContent/ProfessionalObservatory'
 import FascinationFactory from './ModalContent/FascinationFactory'
@@ -26,7 +26,7 @@ export default function ContextModal() {
     }
   }, [overlayType])
 
-  const handleClose = (e) => {
+  const handleClose = (e: MouseEvent) => {
     handleShimmerDownSound()
     e.preventDefault()
     setOverlayType('hidden')

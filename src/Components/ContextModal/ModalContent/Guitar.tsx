@@ -1,4 +1,3 @@
-import React from 'react'
 import './modalContent.css'
 
 export default function Guitar() {
