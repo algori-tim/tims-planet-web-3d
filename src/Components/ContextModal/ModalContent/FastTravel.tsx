@@ -1,10 +1,12 @@
 import React from 'react'
-import './modalContent.css'
-import useStore from '../../../Stores/store'
+import usePlayerStore from '../../../Stores/playerStore'
+import useUIStore from '../../../Stores/uiStore'
 import { Vector3 } from 'yuka'
+import './modalContent.css'
 
 export default function FastTravel() {
-  const { fastTravel, setOverlayType } = useStore()
+  const { setOverlayType } = useUIStore()
+  const { fastTravel } = usePlayerStore()
   const handleFastTravel = (destination) => {
     const hud = document.getElementById('hud') as HTMLElement
     hud.classList.add('vr-overlay')

@@ -19,6 +19,10 @@ const sounds = {
     audio: new Audio('/audio/sound_fx/shimmer_down.wav'),
     volume: 0.65,
   },
+  walking: {
+    audio: new Audio('/audio/sound_fx/walking.mp3'),
+    volume: 0.65,
+  },
 }
 
 export interface AudioState {
@@ -29,6 +33,8 @@ export interface AudioState {
   handleButtonSound(forceSound?: boolean): void
   handleShimmerUpSound(): void
   handleShimmerDownSound(): void
+  handleStartPlayerWalking(): void
+  handleEndPlayerWalking(): void
 }
 
 const playSound = (sound: SoundType): void => {
@@ -75,6 +81,21 @@ const useAudioStore = create<AudioState>()(
     handleShimmerDownSound() {
       const { soundsOn } = get()
       if (soundsOn) playSound(sounds['shimmerDown'])
+    },
+    handleStartPlayerWalking() {
+      const { soundsOn } = get()
+      if (soundsOn) {
+        const walkingSound: SoundType = sounds['walking']
+
+        walkingSound.audio.loop = true
+        walkingSound.audio.playbackRate = 0.65
+        walkingSound.audio.volume = 0.8
+        walkingSound.audio.play()
+      }
+    },
+    handleEndPlayerWalking() {
+      const walkingSound: SoundType = sounds['walking']
+      walkingSound.audio.pause()
     },
   }))
 )

@@ -3,8 +3,16 @@ import { getPath } from '../Helpers/yukaHelpers'
 import { getDistance } from './mathHelpers'
 import gsap from 'gsap'
 
-export const getAnimTimeline = (navMesh, player, pathHelper, target, setNextLocation, speedMultiplyer = 0) => {
+export const getAnimTimeline = (
+  navMesh,
+  player,
+  pathHelper: THREE.Line,
+  target: THREE.Vector3,
+  setNextLocation: (location: THREE.Vector3) => void,
+  speedMultiplyer = 0
+) => {
   const path = getPath(navMesh, player.mesh.position, target)
+
   if (pathHelper) {
     pathHelper.visible = true
     pathHelper.geometry.dispose()

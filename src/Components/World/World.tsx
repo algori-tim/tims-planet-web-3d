@@ -1,5 +1,5 @@
 import { useGLTF } from '@react-three/drei'
-import useStore from '../../Stores/store'
+import usePlayerStore from '../../Stores/playerStore'
 import Interactables from './Interactables/Interactables'
 import React, { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
@@ -35,7 +35,7 @@ export default function World() {
     }
   })
 
-  const handleInteraction = useStore((store) => store.handleInteraction)
+  const handleInteraction = usePlayerStore((store) => store.handleInteraction)
   return (
     <group onClick={(e) => handleInteraction(e)} onPointerOver={(e) => e.stopPropagation()}>
       <mesh receiveShadow name='grass' geometry={nodes.planet_1.geometry} material={materials.planet_grass}></mesh>

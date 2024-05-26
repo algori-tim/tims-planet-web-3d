@@ -1,5 +1,5 @@
 import { useAnimations, useGLTF } from '@react-three/drei'
-import useStore from '../../Stores/store'
+import usePlayerStore from '../../Stores/playerStore'
 import React, { useRef, useEffect } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Vector3, Quaternion, Matrix4, Mesh, Material, AnimationClip, SkinnedMesh, Bone } from 'three'
@@ -37,9 +37,7 @@ export default function Player() {
   const { camera } = useThree()
   const { nodes, materials, animations } = useGLTF('./models/astronaut.glb') as unknown as PlayerGLTF
   const { actions } = useAnimations(animations, playerRef)
-  const setPlayerPosition = useStore((store) => store.setPlayerPosition)
-  const { handleInteraction, nextPlayerLocation, isFastTraveling } = useStore()
-  const initPlayer = useStore((store) => store.initPlayer)
+  const { initPlayer, handleInteraction, nextPlayerLocation, isFastTraveling } = usePlayerStore()
 
   useEffect(() => {
     initPlayer(playerRef.current, actions, setNewPlayerLocation)
@@ -89,7 +87,6 @@ export default function Player() {
       camera.lookAt(playerRef.current.position)
       camera.up.copy(playerRef.current.position.clone().normalize())
 
-      setPlayerPosition(playerRef.current.position)
       if (isEvenToFourDecimals(playerRef.current.position, nextPlayerLocation)) return
       playerRef.current.lookAt(nextPlayerLocation)
     }

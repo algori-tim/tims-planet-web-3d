@@ -1,5 +1,5 @@
 import { useGLTF } from '@react-three/drei'
-import useStore from '../../../Stores/store'
+import usePlayerStore from '../../../Stores/playerStore'
 import { Select } from '@react-three/postprocessing'
 import React, { useEffect, useRef, useState } from 'react'
 import { Mesh, MeshBasicMaterial, Object3D } from 'three'
@@ -16,7 +16,7 @@ function isMesh(obj: Object3D): obj is Mesh {
 
 export default function Interactable(props: InteractableProps) {
   const { setOverlayType, cursorType } = useUIStore()
-  const { handleInteraction } = useStore()
+  const { handleInteraction } = usePlayerStore()
   const [hovered, hover] = useState(false)
   const [isCursorLook, setIsCursorLook] = useState(false)
   const interactableRef = useRef<Mesh>(null!)

@@ -3,13 +3,14 @@ import World from './Components/World/World'
 import Player from './Components/Player/Player'
 import Background from './Components/Background/Background'
 import React, { useRef } from 'react'
-import useStore from './Stores/store'
+import usePlayerStore from './Stores/playerStore'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Group } from 'three'
+import useSceneStore from './Stores/sceneStore'
 
 export default function App() {
   const { scene } = useThree()
-  const init = useStore((s) => s.init)
+  const { init } = useSceneStore()
   const lightRef = useRef<Group>(null!)
 
   init(scene, true)
@@ -27,7 +28,7 @@ export default function App() {
         <Background />
         <directionalLight castShadow position={[1, 2, 3]} intensity={2} />
       </group>
-      {/* <ambientLight intensity={0.9} /> */}
+      <ambientLight intensity={0.7} />
       <World />
       <Player />
     </>
