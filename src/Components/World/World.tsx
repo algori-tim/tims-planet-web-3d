@@ -38,7 +38,7 @@ export default function World() {
   const handleInteraction = usePlayerStore((store) => store.handleInteraction)
   return (
     <group onClick={(e) => handleInteraction(e)} onPointerOver={(e) => e.stopPropagation()}>
-      <mesh receiveShadow name='grass' geometry={nodes.planet_1.geometry} material={materials.planet_grass}></mesh>
+      <mesh name='grass' geometry={nodes.planet_1.geometry} material={materials.planet_grass}></mesh>
       <mesh geometry={nodes.planet_4.geometry} material={materials.na_planet_grass} />
       <mesh name='water' geometry={nodes.planet_2.geometry} material={materials.planet_water}></mesh>
       <mesh name='dirt' geometry={nodes.planet_3.geometry} material={materials.planet_dirt}></mesh>

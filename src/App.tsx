@@ -25,7 +25,7 @@ export default function App() {
       <OrbitControls enableRotate={true} enableZoom={true} maxDistance={100} minDistance={50} />
       <group ref={lightRef}>
         <Background />
-        <directionalLight castShadow position={[1, 2, 3]} intensity={2} />
+        <directionalLight position={[1, 2, 3]} intensity={2} />
       </group>
       <ambientLight intensity={0.7} />
       <World />

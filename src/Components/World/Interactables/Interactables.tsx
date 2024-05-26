@@ -24,19 +24,19 @@ export default function Interactables() {
 
   return (
     <group>
-      {lights.length > 0 && (
-        <Selection>
+      <Selection>
+        {lights.length > 0 && (
           <EffectComposer multisampling={0}>
             <SelectiveBloom lights={lights} radius={1} luminanceThreshold={0.1} intensity={0.25} />
           </EffectComposer>
-          <Interactable model='planet_sign' />
-          <Interactable model='planet_observatory' />
-          <Interactable model='planet_well' />
-          <Interactable model='planet_factory' />
-          <Interactable model='planet_guitar' />
-          <Interactable model='planet_camper' />
-        </Selection>
-      )}
+        )}
+        <Interactable model='planet_sign' />
+        <Interactable model='planet_observatory' />
+        <Interactable model='planet_well' />
+        <Interactable model='planet_factory' />
+        <Interactable model='planet_guitar' />
+        <Interactable model='planet_camper' />
+      </Selection>
     </group>
   )
 }

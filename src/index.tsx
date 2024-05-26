@@ -15,7 +15,7 @@ const cameraOptions = {
 
 root.render(
   <>
-    <Canvas shadows camera={cameraOptions}>
+    <Canvas camera={cameraOptions}>
       <App />
     </Canvas>
     <Hud />

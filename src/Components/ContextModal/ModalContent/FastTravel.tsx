@@ -2,6 +2,7 @@ import usePlayerStore from '../../../Stores/playerStore'
 import useUIStore from '../../../Stores/uiStore'
 import { Vector3 } from 'three'
 import './modalContent.css'
+import './FastTravel.css'
 
 export default function FastTravel() {
   const { setOverlayType } = useUIStore()

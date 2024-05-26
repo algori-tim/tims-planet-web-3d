@@ -75,7 +75,6 @@ export default function Interactable(props: InteractableProps) {
     <>
       <Select enabled={hovered} onClick={(e) => handleInteraction(e)}>
         <primitive
-          castShadow
           onPointerOver={handlePointerOver}
           onPointerOut={handlePointerOut}
           onClick={handleClick}

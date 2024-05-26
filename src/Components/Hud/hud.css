@@ -44,7 +44,7 @@
 }
 
 .hud-messages-container {
-  width: 600px;
+  width: 40rem;
   font-family: 'Teko', sans-serif;
   position: absolute;
   height: 75px;
