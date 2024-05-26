@@ -51,7 +51,7 @@ export default function HelpPage() {
         <p>
           Now, you might be wondering, "What's all this for?" Well, my friend, Tim's Planet is my way of showing you who
           I am and what I do. As a web developer, I love creating experiences that are out of this world. This planet is
-          a mix of my professional work and personal interests – from the coding behind the scenes to the hobbies I
+          a mix of my professional work and personal interests - from the coding behind the scenes to the hobbies I
           sprinkle throughout the landscape. Think of it as a portfolio, but more interactive and, hopefully, more fun!
         </p>
         <p>

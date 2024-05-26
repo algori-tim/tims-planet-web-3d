@@ -1,75 +1,56 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import './hud.css'
 import useStore from '../../Stores/store'
+import useAudioStore from '../../Stores/audioStore'
 
 export default function Hud() {
+  const { musicOn, soundsOn, toggleSounds, toggleMusic } = useAudioStore()
   const setCursor = useStore((store) => store.setCursor)
   const setOverlayType = useStore((store) => store.setOverlayType)
-  const [soundOn, setSoundOn] = useState(true)
-  const [musicOn, setMusicOn] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const musicRef = useRef()
-  const buttonFxRef = useRef()
+  const [menuOpen, setMenuOpen] = useState<boolean>(false)
+  const musicRef = useRef<HTMLAudioElement>(null!)
+  const { handleButtonSound, handleShimmerUpSound } = useAudioStore()
 
-  useEffect(() => {
-    if (musicRef.current && musicOn) {
-      musicRef.current.play()
-      musicRef.current.volume = 0.35
-    } else {
-      musicRef.current.pause()
-    }
-  }, [musicOn])
-
-  const handleButtonSound = () => {
-    if (soundOn && buttonFxRef.current) {
-      buttonFxRef.current.pause()
-      buttonFxRef.current.currentTime = 0
-      buttonFxRef.current.volume = 0.65
-      buttonFxRef.current.play()
-    }
-  }
-  const handleWalkLookClick = (cursor) => {
+  const handleWalkLookClick = (cursor: string) => {
     handleButtonSound()
-    document.getElementById('root').setAttribute('data-cursor', cursor)
+    const root = document.getElementById('root') as HTMLElement
+    root.setAttribute('data-cursor', cursor)
     setCursor(cursor)
   }
 
   const handleQuestion = () => {
-    handleButtonSound()
+    handleShimmerUpSound()
     setOverlayType('help')
   }
 
   const handleGetInTouch = () => {
-    handleButtonSound()
+    handleShimmerUpSound()
     setOverlayType('get_in_touch')
   }
 
   const handleFastTravel = () => {
-    handleButtonSound()
+    handleShimmerUpSound()
     setOverlayType('fast_travel')
   }
 
   const handleMusicToggle = () => {
     handleButtonSound()
-    setMusicOn((current) => !current)
+    toggleMusic()
   }
 
   const handleSoundToggle = () => {
-    handleButtonSound()
-    setSoundOn((current) => !current)
+    handleButtonSound(true)
+    toggleSounds()
   }
 
   const handleMenuClick = () => {
     handleButtonSound()
     setMenuOpen((current) => !current)
   }
-  //TO DO:
-  //add contact and map for fast travel
-  //Sync sounds with zustand store
+
   return (
     <>
-      <audio ref={buttonFxRef} src='/audio/sound_fx/button.mp3' autoPlay={false}></audio>
-      <audio ref={musicRef} src='/audio/music/chillout.mp3' autoPlay={false} loop></audio>
+      <audio id='music-element' ref={musicRef} src='/audio/music/chillout.mp3' autoPlay={false} loop></audio>
       <div id='hud' className='menu'>
         <button onClick={() => handleMenuClick()} className='circle '>
           <img
@@ -89,8 +70,8 @@ export default function Hud() {
             <p className='menu-item-text'>turn music {musicOn ? 'off' : 'on'}</p>
           </button>
           <button onClick={handleSoundToggle} className='menu-item'>
-            <img className='icon' src={soundOn ? '/icons/sound_off.svg' : '/icons/sound_on.svg'} alt='talk'></img>
-            <p className='menu-item-text'>turn sound {soundOn ? 'off' : 'on'}</p>
+            <img className='icon' src={soundsOn ? '/icons/sound_off.svg' : '/icons/sound_on.svg'} alt='talk'></img>
+            <p className='menu-item-text'>turn sound {soundsOn ? 'off' : 'on'}</p>
           </button>
           <button onClick={handleGetInTouch} className='menu-item'>
             <img className='icon' src='/icons/contact.svg' alt='grab'></img>

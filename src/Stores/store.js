@@ -6,6 +6,7 @@ import { CustomNavMesh } from '../CustomYukaObjects/CustomNavMesh'
 import { handleQuipInteraction } from '../Data/interactions'
 import { getDistance } from '../Helpers/mathHelpers'
 import gsap from 'gsap'
+import useAudioStore from './audioStore'
 
 const getAnimTimeline = (navMesh, player, pathHelper, target, setNextLocation, speedMultiplyer = 0) => {
   const path = getPath(navMesh, player.mesh.position, target)
@@ -42,7 +43,7 @@ const useStore = create((set, get) => {
   let playerAnim
   let nextPlayerLocation = new THREE.Vector3(0, 26.1, 0)
   let overlayType = 'help'
-  let playerWalking = new Audio('/audio/sound_fx/walking.mp3')
+
   let setNewPlayerLocation
   let isFastTraveling = false
 
@@ -59,17 +60,11 @@ const useStore = create((set, get) => {
     playerAnim.call(() => {
       //on animation end
       player.animations.walk.stop()
-      playerWalking.pause()
       set({ isFastTraveling: false })
       document.getElementById('hud').classList.remove('vr-overlay')
     })
 
-    playerWalking.loop = true
-    playerWalking.playbackRate = 0.65
-    playerWalking.volume = 0.8
-    playerWalking.play()
     playerAnim.play()
-
     player.animations.walk.play()
     return
   }

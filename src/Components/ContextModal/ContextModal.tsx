@@ -10,21 +10,25 @@ import Camper from './ModalContent/Camper'
 import Guitar from './ModalContent/Guitar'
 import GetInTouch from './ModalContent/GetInTouch'
 import FastTravel from './ModalContent/FastTravel'
+import useAudioStore from '../../Stores/audioStore'
 
 export default function ContextModal() {
+  const { handleShimmerDownSound } = useAudioStore()
   const overlayType = useStore((store) => store.overlayType)
   const setOverlayType = useStore((store) => store.setOverlayType)
   console.log(overlayType)
 
   useEffect(() => {
+    const overlay = document.getElementById('overlay') as HTMLElement
     if (overlayType === 'hidden') {
-      document.getElementById('overlay').style.display = 'none'
+      overlay.style.display = 'none'
     } else {
-      document.getElementById('overlay').style.display = 'flex'
+      overlay.style.display = 'flex'
     }
   }, [overlayType])
 
   const handleClose = (e) => {
+    handleShimmerDownSound()
     e.preventDefault()
     setOverlayType('hidden')
   }

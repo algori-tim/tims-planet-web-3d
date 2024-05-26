@@ -25,12 +25,12 @@ export default function WellOfKnowledge() {
           experience culminated in me obtaining my GED at the age of 17, marking an early milestone in my academic
           journey.
         </p>
-        <h3>🎓 Ozarks Technical Community College: Achieving Excellence</h3>
+        <h3>🎓 Ozarks Technical Community College: Stepping into Higher Education</h3>
         <p>
           After taking a few years to explore my interests and the world around me, I enrolled at Ozarks Technical
           Community College (OTC). During my time at OTC, I pursued an Associate of the Arts degree, a period marked by
-          dedication and academic success. I found myself on the Dean's List for multiple semesters and graduated in
-          2016 with a shining 4.0 GPA - a testament to my commitment and hard work.
+          dedication and academic success. I found myself on the Dean's List for multiple semesters and graduated with a
+          4.0 GPA - a testament to my commitment and hard work.
         </p>
         <h3>🏢 Missouri State University: Continuing To Grow</h3>
         <p>

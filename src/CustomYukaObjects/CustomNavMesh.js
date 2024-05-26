@@ -120,11 +120,20 @@ export class CustomNavMesh extends NavMesh {
 
   getCorridorPoints(corridor) {
     let points = []
-    points.push(corridor.left) // left endpoint
-    points.push(this.interpolate(corridor.left, corridor.right, 0.25)) // 1/4th
-    points.push(this.interpolate(corridor.left, corridor.right, 0.5)) // midpoint
-    points.push(this.interpolate(corridor.left, corridor.right, 0.75)) // 3/4th
-    points.push(corridor.right) // right endpoint
+    // points.push(corridor.left) // left endpoint
+
+    // Interpolate points to divide into 8 sections
+    const numSections = 8
+    for (let i = 1; i < numSections; i++) {
+      const t = i / numSections
+      points.push(this.interpolate(corridor.left, corridor.right, t))
+    }
+
+    // points.push(corridor.right) // right endpoint
     return points
+  }
+
+  interpolate(p1, p2, t) {
+    return new Vector3(p1.x + (p2.x - p1.x) * t, p1.y + (p2.y - p1.y) * t, p1.z + (p2.z - p1.z) * t)
   }
 }

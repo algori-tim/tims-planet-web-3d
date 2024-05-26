@@ -32,7 +32,14 @@ export default function Camper() {
           in the shadows. The rivers and lakes in the area are our sanctuaries, offering us moments of peace as we spend
           time on their banks or gently glide over their serene waters.
         </p>
-
+        <hr
+          style={{
+            color: 'white',
+            width: '25%',
+            marginTop: '25px',
+            marginBottom: '25px',
+          }}
+        />
         <p>
           These outdoor escapades are more than just hobbies; they are a testament to my love for nature and adventure.
           They rejuvenate my spirit and inspire my work, adding depth and color to the creations I bring to life in the

@@ -1,14 +1,31 @@
 import { useAnimations, useGLTF } from '@react-three/drei'
 import useStore from '../../Stores/store'
-import { useRef, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import * as THREE from 'three'
+import { Vector3, Quaternion, Matrix4, Mesh, Material, AnimationClip, SkinnedMesh, Bone } from 'three'
 
-const truncateToFourDecimals = (num) => {
+interface PlayerGLTF {
+  nodes: {
+    cosmonaut_1: SkinnedMesh
+    cosmonaut_2: SkinnedMesh
+    cosmonaut_3: SkinnedMesh
+    Bone: Bone
+    Bone_L004: Bone
+    Bone_R004: Bone
+  }
+  materials: {
+    orange: Material
+    black: Material
+    silver: Material
+  }
+  animations: AnimationClip[]
+}
+
+const truncateToFourDecimals = (num: number): number => {
   return Math.floor(num * 10000) / 10000
 }
 
-const isEvenToFourDecimals = (pointOne, pointTwo) => {
+const isEvenToFourDecimals = (pointOne: Vector3, pointTwo: Vector3): boolean => {
   const isXMatch = truncateToFourDecimals(pointOne.x) === truncateToFourDecimals(pointTwo.x)
   const isYMatch = truncateToFourDecimals(pointOne.y) === truncateToFourDecimals(pointTwo.y)
   const isZMatch = truncateToFourDecimals(pointOne.z) === truncateToFourDecimals(pointTwo.z)
@@ -16,9 +33,9 @@ const isEvenToFourDecimals = (pointOne, pointTwo) => {
 }
 
 export default function Player() {
-  const playerRef = useRef(null)
+  const playerRef = useRef<Mesh>(null!)
   const { camera } = useThree()
-  const { nodes, materials, animations } = useGLTF('./models/astronaut.glb')
+  const { nodes, materials, animations } = useGLTF('./models/astronaut.glb') as unknown as PlayerGLTF
   const { actions } = useAnimations(animations, playerRef)
   const setPlayerPosition = useStore((store) => store.setPlayerPosition)
   const { handleInteraction, nextPlayerLocation, isFastTraveling } = useStore()
@@ -31,11 +48,13 @@ export default function Player() {
     camera.position.set(0, 45.1, 0)
   }, [])
 
-  const setNewPlayerLocation = (newPosition) => {
-    playerRef.current.position.copy(newPosition)
-    const normal = playerRef.current.position.clone().normalize()
-    playerRef.current.up.copy(normal)
-    playerRef.current.rotation.setFromQuaternion(playerRef.current.quaternion)
+  const setNewPlayerLocation = (newPosition: Vector3): void => {
+    if (playerRef.current) {
+      playerRef.current.position.copy(newPosition)
+      const normal = playerRef.current.position.clone().normalize()
+      playerRef.current.up.copy(normal)
+      playerRef.current.rotation.setFromQuaternion(playerRef.current.quaternion)
+    }
   }
 
   useFrame(() => {
@@ -44,19 +63,32 @@ export default function Player() {
       playerRef.current.up.copy(normal)
       playerRef.current.rotation.setFromQuaternion(playerRef.current.quaternion)
 
-      const cameraOffset = new THREE.Vector3(0, 20, -15)
-      const offset = cameraOffset.clone().applyQuaternion(playerRef.current.quaternion)
-      const targetPosition = playerRef.current.position.clone().add(offset)
+      const playerPosition = playerRef.current.position.clone()
+      const playerQuaternion = playerRef.current.quaternion.clone()
+
+      const cameraOffset = new Vector3(0, 20, -15)
+      const offset = cameraOffset.clone().applyQuaternion(playerQuaternion)
+      const targetPosition = playerPosition.add(offset)
 
       if (isFastTraveling) {
         console.log('fast travel')
         camera.position.copy(targetPosition)
       } else {
+        //Camera follow speed
         camera.position.lerp(targetPosition, 0.008)
       }
 
+      // Interpolate camera rotation
+      const targetQuaternion = new Quaternion().setFromRotationMatrix(
+        new Matrix4().lookAt(camera.position, playerRef.current.position, playerRef.current.up)
+      )
+
+      // camera rotate speed
+      camera.quaternion.slerp(targetQuaternion, 0.001)
+
       camera.lookAt(playerRef.current.position)
       camera.up.copy(playerRef.current.position.clone().normalize())
+
       setPlayerPosition(playerRef.current.position)
       if (isEvenToFourDecimals(playerRef.current.position, nextPlayerLocation)) return
       playerRef.current.lookAt(nextPlayerLocation)

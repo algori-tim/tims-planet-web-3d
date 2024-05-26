@@ -21,8 +21,8 @@ export default function GetInTouch() {
       <h3>🔗 LinkedIn</h3>
       <p>
         Connect with me on LinkedIn for a more professional interaction. Check out my profile at{' '}
-        <a href='https://www.linkedin.com/in/tim' target='_blank' rel='noopener noreferrer'>
-          linkedin.com/tim
+        <a href='https://www.linkedin.com/in/timabbottjohnson' target='_blank' rel='noopener noreferrer'>
+          /timabbottjohnson
         </a>
         . It's a great place to network and keep up to date with my professional activities.
       </p>
@@ -30,8 +30,8 @@ export default function GetInTouch() {
       <h3>🐙 GitHub</h3>
       <p>
         If you're curious about my coding projects or want to collaborate, visit my GitHub profile at{' '}
-        <a href='https://github.com/tim-github' target='_blank' rel='noopener noreferrer'>
-          tim-github
+        <a href='https://github.com/algori-tim' target='_blank' rel='noopener noreferrer'>
+          algori-tim
         </a>
         . Feel free to explore my repositories and don't hesitate to reach out if you have any questions or ideas.
       </p>

@@ -1,11 +1,12 @@
+import React from 'react'
 import './index.css'
 import ReactDOM from 'react-dom/client'
 import { Canvas } from '@react-three/fiber'
-import App from './App.jsx'
+import App from './App'
 import Hud from './Components/Hud/Hud'
-import ContextModal from './Components/ContextModal/ContextModal.jsx'
+import ContextModal from './Components/ContextModal/ContextModal'
 
-const root = ReactDOM.createRoot(document.querySelector('#root'))
+const root = ReactDOM.createRoot(document.querySelector('#root') as HTMLElement)
 const cameraOptions = {
   fov: 45,
   near: 0.1,
@@ -15,7 +16,7 @@ const cameraOptions = {
 
 root.render(
   <>
-    <Canvas camera={cameraOptions}>
+    <Canvas shadows camera={cameraOptions}>
       <App />
     </Canvas>
     <Hud />
