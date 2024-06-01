@@ -12,7 +12,7 @@ export interface Player {
   state: string
 }
 
-interface PlaterState {
+interface PlayerState {
   player: Player | null
   nextPlayerLocation: THREE.Vector3
   isFastTraveling: boolean
@@ -27,7 +27,7 @@ interface PlaterState {
   ): void
 }
 
-const usePlayerStore = create<PlaterState>((set, get) => {
+const usePlayerStore = create<PlayerState>((set, get) => {
   let playerAnim: any
   const nextPlayerLocation = new THREE.Vector3(0, 26.1, 0)
 

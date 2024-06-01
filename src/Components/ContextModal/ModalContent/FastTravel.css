@@ -5,13 +5,13 @@
   row-gap: 50px;
 }
 
-@media (max-width: 1900px) {
+@media (max-width: 1500px) {
   .fast-travel-list {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 800px) {
   .fast-travel-list {
     grid-template-columns: 1fr;
   }

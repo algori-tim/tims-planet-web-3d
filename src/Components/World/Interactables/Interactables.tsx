@@ -1,5 +1,5 @@
 import { Selection, EffectComposer, SelectiveBloom } from '@react-three/postprocessing'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useThree } from '@react-three/fiber'
 import Interactable from '../Interactable/Interactable'
 import { Light, Object3D } from 'three'
@@ -22,10 +22,12 @@ export default function Interactables() {
     setLights(allLights)
   }, [scene])
 
+  const hasLights = useMemo(() => lights.length > 0, [lights])
+
   return (
     <group>
       <Selection>
-        {lights.length > 0 && (
+        {hasLights && (
           <EffectComposer multisampling={0}>
             <SelectiveBloom lights={lights} radius={1} luminanceThreshold={0.1} intensity={0.25} />
           </EffectComposer>

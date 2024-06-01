@@ -38,7 +38,6 @@ export interface AudioState {
 }
 
 const playSound = (sound: SoundType): void => {
-  console.log('playing', sound)
   sound.audio.pause()
   sound.audio.currentTime = 0
   sound.audio.volume = sound.volume
@@ -69,7 +68,6 @@ const useAudioStore = create<AudioState>()(
         return { soundsOn: !state.soundsOn }
       })
     },
-    //add this to all buton clicks
     handleButtonSound(forceSound: boolean = false) {
       const { soundsOn } = get()
       if (forceSound || soundsOn) playSound(sounds['buttonClick'])
@@ -86,7 +84,6 @@ const useAudioStore = create<AudioState>()(
       const { soundsOn } = get()
       if (soundsOn) {
         const walkingSound: SoundType = sounds['walking']
-
         walkingSound.audio.loop = true
         walkingSound.audio.playbackRate = 0.65
         walkingSound.audio.volume = 0.8

@@ -1,35 +1,29 @@
-import { OrbitControls } from '@react-three/drei'
-import World from './Components/World/World'
-import Player from './Components/Player/Player'
-import Background from './Components/Background/Background'
-import { useRef } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
-import { Group } from 'three'
-import useSceneStore from './Stores/sceneStore'
+import Hud from './Components/Hud/Hud'
+import ContextModal from './Components/ContextModal/ContextModal'
+import './index.css'
+import Scene from './Scene/Scene'
+import { Canvas } from '@react-three/fiber'
+import useIsMobile from './Hooks/useIsMobile'
+import MobileScene from './Scene/MobileScene'
+
+const cameraOptions = {
+  fov: 45,
+  near: 0.1,
+  far: 500,
+}
 
 export default function App() {
-  const { scene } = useThree()
-  const { init } = useSceneStore()
-  const lightRef = useRef<Group>(null!)
-
-  init(scene, true)
-
-  useFrame(() => {
-    if (lightRef.current) {
-      lightRef.current.rotation.y = lightRef.current.rotation.y + 0.00005
-    }
-  })
+  const isMobile = useIsMobile()
 
   return (
     <>
-      <OrbitControls enableRotate={true} enableZoom={true} maxDistance={100} minDistance={50} />
-      <group ref={lightRef}>
-        <Background />
-        <directionalLight position={[1, 2, 3]} intensity={2} />
-      </group>
-      <ambientLight intensity={0.7} />
-      <World />
-      <Player />
+      <Canvas camera={cameraOptions}>{!isMobile ? <Scene /> : <MobileScene />}</Canvas>
+      <ContextModal />
+      {!isMobile && (
+        <>
+          <Hud />
+        </>
+      )}
     </>
   )
 }

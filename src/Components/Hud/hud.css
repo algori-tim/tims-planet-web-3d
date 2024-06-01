@@ -43,6 +43,10 @@
   cursor: pointer;
 }
 
+.menu-item-select {
+  background-color: rgba(145, 125, 74, 0.589);
+}
+
 .hud-messages-container {
   width: 40rem;
   font-family: 'Teko', sans-serif;

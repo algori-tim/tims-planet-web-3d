@@ -11,13 +11,15 @@ import FastTravel from './ModalContent/FastTravel'
 import useAudioStore from '../../Stores/audioStore'
 import useUIStore from '../../Stores/uiStore'
 import './contextModal.css'
+import Mobile from './ModalContent/Mobile'
 
 export default function ContextModal() {
   const { handleShimmerDownSound } = useAudioStore()
-  const { setOverlayType, overlayType } = useUIStore()
-  console.log(overlayType)
+  const overlayType = useUIStore((state) => state.overlayType)
+  const { setOverlayType } = useUIStore()
 
   useEffect(() => {
+    console.log('overlay type:', overlayType)
     const overlay = document.getElementById('overlay') as HTMLElement
     if (overlayType === 'hidden') {
       overlay.style.display = 'none'
@@ -44,11 +46,14 @@ export default function ContextModal() {
         {overlayType === 'help' && <HelpPage />}
         {overlayType === 'get_in_touch' && <GetInTouch />}
         {overlayType === 'fast_travel' && <FastTravel />}
-        <div className='modal-footer'>
-          <button onClick={handleClose}>
-            <img className='modal-close' src='/icons/circle_check.svg' alt='' />
-          </button>
-        </div>
+        {overlayType === 'mobile' && <Mobile />}
+        {overlayType !== 'mobile' && (
+          <div className='modal-footer'>
+            <button onClick={handleClose}>
+              <img className='modal-close' src='/icons/circle_check.svg' alt='' />
+            </button>
+          </div>
+        )}
       </main>
     </div>
   )

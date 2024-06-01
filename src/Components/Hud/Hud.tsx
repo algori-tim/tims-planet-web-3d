@@ -5,7 +5,7 @@ import useUIStore from '../../Stores/uiStore'
 
 export default function Hud() {
   const { musicOn, soundsOn, toggleSounds, toggleMusic } = useAudioStore()
-  const { setOverlayType, setCursor } = useUIStore()
+  const { setOverlayType, setCursor, cursorType } = useUIStore()
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
   const musicRef = useRef<HTMLAudioElement>(null!)
   const { handleButtonSound, handleShimmerUpSound } = useAudioStore()
@@ -89,10 +89,18 @@ export default function Hud() {
       </div>
       <div className='toggles-container hud'>
         <div className='toggles'>
-          <button onClick={() => handleWalkLookClick('look')} className='circle'>
+          <button
+            id='look-button'
+            onClick={(e) => handleWalkLookClick('look')}
+            className={cursorType === 'look' ? 'circle menu-item-select' : 'circle'}
+          >
             <img className='icon' src='/icons/look.svg' alt='look'></img>
           </button>
-          <button onClick={() => handleWalkLookClick('walk')} className='circle'>
+          <button
+            id='walk-button'
+            onClick={(e) => handleWalkLookClick('walk')}
+            className={cursorType === 'walk' ? 'circle menu-item-select' : 'circle'}
+          >
             <img className='icon' src='/icons/walk.svg' alt='walk'></img>
           </button>
           <button onClick={handleFastTravel} className='circle'>

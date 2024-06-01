@@ -1,7 +1,7 @@
 import { useGLTF } from '@react-three/drei'
 import usePlayerStore from '../../../Stores/playerStore'
 import { Select } from '@react-three/postprocessing'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import { Mesh, MeshBasicMaterial, Object3D } from 'three'
 import useAudioStore from '../../../Stores/audioStore'
 import useUIStore from '../../../Stores/uiStore'
@@ -14,15 +14,15 @@ function isMesh(obj: Object3D): obj is Mesh {
   return (obj as Mesh).isMesh !== undefined
 }
 
-export default function Interactable(props: InteractableProps) {
+export default function Interactable({ model }: InteractableProps) {
   const { setOverlayType, cursorType } = useUIStore()
   const { handleInteraction } = usePlayerStore()
-  const [hovered, hover] = useState(false)
+  const [hovered, setHovered] = useState(false)
   const [isCursorLook, setIsCursorLook] = useState(false)
   const interactableRef = useRef<Mesh>(null!)
   const duplicateRef = useRef<Mesh>(null!)
-  const glb = useGLTF(`./models/${props.model}.glb`)
-  const glowMaterial = new MeshBasicMaterial({ color: '#ffff99', opacity: 0.25, transparent: true })
+  const glb = useGLTF(`./models/${model}.glb`)
+  const glowMaterial = useMemo(() => new MeshBasicMaterial({ color: '#ffff99', opacity: 0.25, transparent: true }), [])
   const { handleShimmerUpSound: handleShimmerSound } = useAudioStore()
 
   useEffect(() => {
@@ -37,39 +37,38 @@ export default function Interactable(props: InteractableProps) {
       duplicateRef.current = duplicate
       interactableRef.current.parent?.add(duplicate)
     }
-  }, [interactableRef.current])
+  }, [glowMaterial])
 
   useEffect(() => {
-    setIsCursorLook(() => cursorType === 'look')
+    setIsCursorLook(cursorType === 'look')
   }, [cursorType])
 
-  const handlePointerOver = () => {
+  const handlePointerOver = useCallback(() => {
     if (isCursorLook) {
       if (duplicateRef.current) {
-        console.log(duplicateRef.current)
         duplicateRef.current.scale.set(1, 1, 1)
       }
-      hover(true)
+      setHovered(true)
     }
-  }
+  }, [isCursorLook])
 
-  const handlePointerOut = () => {
+  const handlePointerOut = useCallback(() => {
     if (hovered) {
       if (duplicateRef.current) {
         duplicateRef.current.scale.set(0, 0, 0)
       }
-      hover(false)
+      setHovered(false)
     }
-  }
+  }, [hovered])
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (isCursorLook) {
       handleShimmerSound()
-      setOverlayType(props.model)
+      setOverlayType(model)
       const overlay = document.getElementById('overlay') as HTMLElement
       overlay.style.display = 'flex'
     }
-  }
+  }, [isCursorLook, handleShimmerSound, setOverlayType, model])
 
   return (
     <>
