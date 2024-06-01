@@ -69,7 +69,6 @@ export default function Player() {
       const targetPosition = playerPosition.add(offset)
 
       if (isFastTraveling) {
-        console.log('fast travel')
         camera.position.copy(targetPosition)
       } else {
         //Camera follow speed

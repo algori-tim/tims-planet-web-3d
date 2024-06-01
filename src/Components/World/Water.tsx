@@ -1,4 +1,4 @@
-import { useAnimations, useGLTF } from '@react-three/drei'
+import { useGLTF } from '@react-three/drei'
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { AnimationClip, Material, Mesh } from 'three'
@@ -15,11 +15,8 @@ interface Water {
 
 export default function Water() {
   const waterRef = useRef<Mesh>(null!)
-  const { nodes, materials, animations } = useGLTF('./models/water.glb') as unknown as Water
-  console.log(animations)
+  const { nodes, materials } = useGLTF('./models/water.glb') as unknown as Water
 
-  const { actions } = useAnimations(animations, waterRef)
-  console.log(actions)
   const satelliteRef = useRef<Mesh>(null!)
 
   useFrame(() => {

@@ -80,7 +80,6 @@ const getInteractionMessage = (cursor: string, interactionPoint: string) => {
     if (messages.length === 1) return messages[0]
 
     const randomQuipIndex = Math.floor(Math.random() * messages.length)
-    console.log(randomQuipIndex)
     if (messages) return messages[randomQuipIndex]
   }
 
@@ -89,7 +88,6 @@ const getInteractionMessage = (cursor: string, interactionPoint: string) => {
 }
 
 const handleIfKnownMultples = (interactionPoint: string) => {
-  console.log('interactionPoint', interactionPoint)
   if (interactionPoint.startsWith('og_tree')) return 'tree'
   if (interactionPoint.startsWith('rock')) return 'rock'
 

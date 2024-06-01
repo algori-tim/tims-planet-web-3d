@@ -11,10 +11,8 @@ const useIsMobile = () => {
       const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
       if (isScreenToSmall || isMobileDevice) {
-        console.log('MOBILE')
         setOverlayType('mobile')
       } else {
-        console.log('NOT MOBILE')
         setOverlayType('hidden')
       }
 

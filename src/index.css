@@ -19,17 +19,17 @@ button {
 }
 
 div[data-cursor='look'] {
-  cursor: url('./icons/look.cur'), default;
+  cursor: url('icons/look.cur'), default;
 }
 
 div[data-cursor='talk'] {
-  cursor: url('./icons/talk.cur'), default;
+  cursor: url('icons/talk.cur'), default;
 }
 
 div[data-cursor='walk'] {
-  cursor: url('./icons/walk.cur'), default;
+  cursor: url('icons/walk.cur'), default;
 }
 
 div[data-cursor='grab'] {
-  cursor: url('./icons/grab.cur'), default;
+  cursor: url('icons/grab.cur'), default;
 }

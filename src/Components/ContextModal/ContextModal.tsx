@@ -19,7 +19,6 @@ export default function ContextModal() {
   const { setOverlayType } = useUIStore()
 
   useEffect(() => {
-    console.log('overlay type:', overlayType)
     const overlay = document.getElementById('overlay') as HTMLElement
     if (overlayType === 'hidden') {
       overlay.style.display = 'none'
