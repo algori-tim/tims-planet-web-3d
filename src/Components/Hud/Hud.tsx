@@ -91,14 +91,14 @@ export default function Hud() {
         <div className='toggles'>
           <button
             id='look-button'
-            onClick={(e) => handleWalkLookClick('look')}
+            onClick={() => handleWalkLookClick('look')}
             className={cursorType === 'look' ? 'circle menu-item-select' : 'circle'}
           >
             <img className='icon' src='/icons/look.svg' alt='look'></img>
           </button>
           <button
             id='walk-button'
-            onClick={(e) => handleWalkLookClick('walk')}
+            onClick={() => handleWalkLookClick('walk')}
             className={cursorType === 'walk' ? 'circle menu-item-select' : 'circle'}
           >
             <img className='icon' src='/icons/walk.svg' alt='walk'></img>
