@@ -4,16 +4,19 @@ import { Vector3 } from 'three'
 import './modalContent.css'
 import './FastTravel.css'
 
+const imageHeight = '200px'
+
 export default function FastTravel() {
   const { setOverlayType } = useUIStore()
   const { fastTravel } = usePlayerStore()
+
   const handleFastTravel = (destination: Vector3) => {
     const hud = document.getElementById('hud') as HTMLElement
     hud.classList.add('vr-overlay')
     fastTravel(destination)
     setOverlayType('hidden')
   }
-  const imageHeight = '200px'
+
   return (
     <div className='modal-content'>
       <h2 className='modal-header'>Fast Travel: Navigate Tim's Planet with Ease</h2>

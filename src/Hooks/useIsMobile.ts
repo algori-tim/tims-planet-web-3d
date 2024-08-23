@@ -13,7 +13,7 @@ const useIsMobile = () => {
       if (isScreenToSmall || isMobileDevice) {
         setOverlayType('mobile')
       } else {
-        setOverlayType('hidden')
+        setOverlayType('help')
       }
 
       setisMobile(() => isScreenToSmall)
